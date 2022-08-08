@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<kotlin.version>1.7.10</kotlin.version>
+		<redis.om.version>0.5.1</redis.om.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -49,6 +50,11 @@
 		<dependency>
 			<groupId>org.jetbrains.kotlinx</groupId>
 			<artifactId>kotlinx-coroutines-reactor</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.redis.om</groupId>
+			<artifactId>redis-om-spring</artifactId>
+			<version>${redis.om.version}</version>
 		</dependency>
 
 		<dependency>
@@ -118,6 +124,10 @@
 			<releases>
 				<enabled>false</enabled>
 			</releases>
+		</repository>
+		<repository>
+			<id>snapshots-repo</id>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
 		</repository>
 	</repositories>
 	<pluginRepositories>
