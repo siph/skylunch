@@ -1,0 +1,14 @@
+spring:
+  redis:
+    host: "localhost"
+    port: 6370
+  main:
+    allow-bean-definition-overriding: true
+application:
+  airport:
+    api:
+      key: "k"
+      url: "u"
+  redis:
+    host: "localhost"
+    port: 6370
