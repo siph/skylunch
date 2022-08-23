@@ -6,9 +6,10 @@ spring:
     allow-bean-definition-overriding: true
 application:
   airport:
+    daysUntilStale: 0
     api:
-      key: "k"
-      url: "u"
+      apiKey: "k"
+      baseUrl: "u"
   redis:
     host: "localhost"
     port: 6370
