@@ -22,6 +22,7 @@ class AirportService(
             false -> {
                 airportApiService
                     .getAirport(airportCode)
+                    .map { it.first() }
                     .subscribe(this::saveAirport)
             }
         }
@@ -34,6 +35,7 @@ class AirportService(
         if (airport.modified.isBefore(stalenessDate)) {
             airportApiService
                 .getAirport(airportToAirportCode(airport))
+                .map { it.first() }
                 .subscribe {
                     updateAirport(
                         Airport(
