@@ -1,4 +1,4 @@
-package com.skylunch.skylunch.airport
+package com.skylunch.airport
 
 import com.redis.om.spring.annotations.Document
 import com.redis.om.spring.annotations.Indexed

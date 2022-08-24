@@ -1,4 +1,4 @@
-package com.skylunch.skylunch.redis
+package com.skylunch.redis
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

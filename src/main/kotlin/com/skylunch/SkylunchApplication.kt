@@ -1,8 +1,8 @@
-package com.skylunch.skylunch
+package com.skylunch
 
 import com.redis.om.spring.annotations.EnableRedisDocumentRepositories
-import com.skylunch.skylunch.airport.AirportProperties
-import com.skylunch.skylunch.redis.RedisProperties
+import com.skylunch.airport.AirportProperties
+import com.skylunch.redis.RedisProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication

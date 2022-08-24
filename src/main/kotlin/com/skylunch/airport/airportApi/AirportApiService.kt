@@ -1,6 +1,7 @@
-package com.skylunch.skylunch.airport
+package com.skylunch.airport.airportApi
 
-import com.skylunch.skylunch.airport.airportApi.AirportApiDTO
+import com.skylunch.airport.AirportCode
+import com.skylunch.airport.AirportProperties
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient

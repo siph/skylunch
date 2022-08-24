@@ -1,4 +1,4 @@
-package com.skylunch.skylunch.airport
+package com.skylunch.airport
 
 import com.redis.om.spring.repository.RedisDocumentRepository
 import java.util.*

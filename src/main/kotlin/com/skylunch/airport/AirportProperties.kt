@@ -1,6 +1,6 @@
-package com.skylunch.skylunch.airport
+package com.skylunch.airport
 
-import com.skylunch.skylunch.airport.airportApi.AirportApiProperties
+import com.skylunch.airport.airportApi.AirportApiProperties
 import jakarta.validation.constraints.Min
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding

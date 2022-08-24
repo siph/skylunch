@@ -1,6 +1,7 @@
-package com.skylunch.skylunch.airport
+package com.skylunch.airport
 
-import com.skylunch.skylunch.airport.airportApi.AirportApiDTO
+import com.skylunch.airport.airportApi.AirportApiDTO
+import com.skylunch.airport.airportApi.AirportApiService
 import org.springframework.data.geo.Point
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime

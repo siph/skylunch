@@ -1,4 +1,4 @@
-package com.skylunch.skylunch.redis
+package com.skylunch.redis
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding

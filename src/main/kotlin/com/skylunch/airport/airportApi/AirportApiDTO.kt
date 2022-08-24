@@ -1,7 +1,11 @@
-package com.skylunch.skylunch.airport.airportApi
+package com.skylunch.airport.airportApi
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
+/**
+ * Data Transfer Object for the `Api Ninjas Airport Api`.
+ * This class omits several unused properties.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class AirportApiDTO(
     val icao: String?,

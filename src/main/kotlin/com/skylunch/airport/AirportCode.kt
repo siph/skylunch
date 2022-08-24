@@ -1,4 +1,4 @@
-package com.skylunch.skylunch.airport
+package com.skylunch.airport
 
 data class AirportCode(
     val code: String,
