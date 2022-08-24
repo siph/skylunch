@@ -3,9 +3,6 @@ package com.skylunch.airport.airportApi
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.skylunch.airport.AirportCode
 import com.skylunch.airport.AirportProperties
-import com.skylunch.airport.airportApi.AirportApiDTO
-import com.skylunch.airport.airportApi.AirportApiProperties
-import com.skylunch.airport.airportApi.AirportApiService
 import com.skylunch.airport.getAirportCodeType
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -58,10 +55,10 @@ class AirportApiServiceTests {
 }
 
 /**
- * Returns a mock <a href="#{@link}">{@link com.skylunch.skylunch.airport.airportApi.AirportApiProperties}</a>.
+ * Returns a mock [AirportProperties].
  * The default apiKey and daysUntilStale is 'key' and 0 respectively.
- * @param baseUrl the url that is injected into the <a href="#{@link}">{@link AirportApiService}</a>.
- * @return mock properties
+ * @param baseUrl the url that is injected into the [AirportApiService].
+ * @return mock properties.
  */
 fun getMockProperties(baseUrl: String): AirportProperties {
     return AirportProperties(
@@ -73,10 +70,21 @@ fun getMockProperties(baseUrl: String): AirportProperties {
     )
 }
 
+/**
+ * Returns a mock [AirportCode].
+ * The default code is 'lax' and the [com.skylunch.airport.CodeType] property is dynamically generated.
+ * @param code three or four digit airport code.
+ * @return mock [AirportCode].
+ */
 fun getMockAirportCode(code: String = "lax"): AirportCode {
     return AirportCode(code, getAirportCodeType(code))
 }
 
+/**
+ * Returns a mock [AirportApiDTO].
+ * The default value is the actual returned value for 'lax'.
+ * @return mock [AirportApiDTO].
+ */
 fun getMockAirportApiDTO(): AirportApiDTO {
     return AirportApiDTO(
         icao = "KLAX",

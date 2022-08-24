@@ -18,6 +18,12 @@ class AirportApiService(
         .defaultHeader("X-RapidAPI-host", "airports-by-api-ninjas.p.rapidapi.com")
         .build()
 
+    /**
+     * Returns a mock [AirportProperties].
+     * The default apiKey and daysUntilStale is 'key' and 0 respectively.
+     * @param baseUrl the url that is injected into the [AirportApiService].
+     * @return mock properties.
+     */
     fun getAirport(airportCode: AirportCode): Mono<List<AirportApiDTO>> {
         return webClient
             .get()

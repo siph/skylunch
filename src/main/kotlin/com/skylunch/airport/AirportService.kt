@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.*
 
-
+/**
+ * Service layer to interact with the [airportRepository] and remote [airportApiService].
+ */
 @Service
 class AirportService(
     private val airportApiService: AirportApiService,
@@ -15,6 +17,13 @@ class AirportService(
     private val airportProperties: AirportProperties,
 ) {
 
+    /**
+     * Will search the repository for an [Airport] document using the [airportCode]. If a document is
+     * found the freshness of the document will be validated according to the [AirportProperties].
+     * If either the document is not found or the document is stale, the remote server will be queried
+     * for a new document.
+     * @return a fresh airport.
+     */
     fun getAirport(airportCode: AirportCode): Optional<Airport> {
         when (airportIsCached(airportCode)) {
             true -> {

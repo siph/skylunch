@@ -6,6 +6,10 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.geo.Point
 import java.time.LocalDateTime
 
+/**
+ * The airport document model that is stored by redis.
+ * [modified] should be updated to indicate the freshness or staleness of a query.
+ */
 @Document
 data class Airport(
     @Id
