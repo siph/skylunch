@@ -48,7 +48,7 @@ class AirportApiServiceTests {
             .verifyComplete()
 
         val request = server.takeRequest()
-        Assertions.assertTrue(request.path!!.contains("iata=lax"))
+        Assertions.assertTrue(request.path!!.contains("iata=LAX"))
         Assertions.assertNotNull(request.getHeader("X-RapidAPI-Key"))
         Assertions.assertNotNull(request.getHeader("X-RapidAPI-host"))
     }
@@ -58,25 +58,26 @@ class AirportApiServiceTests {
  * Returns a mock [AirportProperties].
  * The default apiKey and daysUntilStale is 'key' and 0 respectively.
  * @param baseUrl the url that is injected into the [AirportApiService].
+ * @param daysUntilStale refresh interval
  * @return mock properties.
  */
-fun getMockProperties(baseUrl: String): AirportProperties {
+fun getMockProperties(baseUrl: String, daysUntilStale: Long = 0L): AirportProperties {
     return AirportProperties(
         api = AirportApiProperties(
             baseUrl = baseUrl,
             apiKey = "key",
         ),
-        daysUntilStale = 0L
+        daysUntilStale = daysUntilStale
     )
 }
 
 /**
  * Returns a mock [AirportCode].
- * The default code is 'lax' and the [com.skylunch.airport.CodeType] property is dynamically generated.
+ * The default code is 'LAX' and the [com.skylunch.airport.CodeType] property is dynamically generated.
  * @param code three or four digit airport code.
  * @return mock [AirportCode].
  */
-fun getMockAirportCode(code: String = "lax"): AirportCode {
+fun getMockAirportCode(code: String = "LAX"): AirportCode {
     return AirportCode(code, getAirportCodeType(code))
 }
 
@@ -89,7 +90,7 @@ fun getMockAirportApiDTO(): AirportApiDTO {
     return AirportApiDTO(
         icao = "KLAX",
         iata = "LAX",
-        name = "Los Angeles Internation Airport",
+        name = "Los Angeles International Airport",
         latitude = "33.94250107",
         longitude = "-118.4079971",
     )

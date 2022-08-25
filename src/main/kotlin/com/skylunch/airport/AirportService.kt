@@ -50,10 +50,11 @@ class AirportService(
                     updateAirport(
                         Airport(
                             id = airport.id,
-                            iata = it.iata,
-                            icao = it.icao,
+                            iata = it.iata?.uppercase(),
+                            icao = it.icao?.uppercase(),
                             name = it.name,
                             location = getPoint(it),
+                            modified = LocalDateTime.now(),
                         )
                     )
                 }
@@ -62,8 +63,8 @@ class AirportService(
 
     private fun findAirport(airportCode: AirportCode): Optional<Airport> {
         return when (airportCode.codeType) {
-            CodeType.ICAO -> airportRepository.findAirportByIata(airportCode.code)
-            CodeType.IATA -> airportRepository.findAirportByIcao(airportCode.code)
+            CodeType.IATA -> airportRepository.findAirportByIata(airportCode.code)
+            CodeType.ICAO -> airportRepository.findAirportByIcao(airportCode.code)
         }
     }
 
@@ -77,8 +78,8 @@ class AirportService(
     private fun saveAirport(airportApiDTO: AirportApiDTO): Airport {
         return airportRepository.save(
             Airport(
-                iata = airportApiDTO.iata,
-                icao = airportApiDTO.icao,
+                iata = airportApiDTO.iata?.uppercase(),
+                icao = airportApiDTO.icao?.uppercase(),
                 name = airportApiDTO.name,
                 location = getPoint(airportApiDTO)
             )

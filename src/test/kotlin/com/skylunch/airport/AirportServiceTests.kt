@@ -1,18 +1,24 @@
 package com.skylunch.airport
 
 import com.skylunch.airport.airportApi.AirportApiService
+import com.skylunch.airport.airportApi.getMockAirportCode
 import com.skylunch.airport.airportApi.getMockProperties
 import okhttp3.mockwebserver.MockWebServer
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.data.geo.Point
 import org.springframework.web.reactive.function.client.WebClient
+import java.time.LocalDateTime
+import java.util.*
 
 @ExtendWith(MockitoExtension::class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AirportServiceTests {
 
     @Mock
@@ -27,14 +33,32 @@ class AirportServiceTests {
     private lateinit var server: MockWebServer
 
     @BeforeEach
-    fun setup() {
-
+    fun initialize() {
+        airportProperties = getMockProperties(
+            baseUrl = "${server.url("/v1/airports")}:${server.port}",
+            daysUntilStale = 10L,
+        )
+        airportApiService = AirportApiService(WebClient.builder(), airportProperties)
+        airportRepository = Mockito.mock(AirportRepository::class.java)
+        airportService = AirportService(airportApiService, airportRepository, airportProperties)
     }
 
-    @BeforeEach
-    fun initialize() {
-        val properties = getMockProperties("${server.url("/v1/airports")}:${server.port}")
-        airportApiService = AirportApiService(WebClient.builder(), properties)
+    @Test
+    fun `assert airport is found`(){
+        val airport = Airport(
+            id = "1",
+            icao = "KLAX",
+            iata = "LAX",
+            name = "Los Angeles International Airport",
+            location = Point("-118.4079971".toDouble(), "33.94250107".toDouble()),
+            modified = LocalDateTime.now().minusDays(100L)
+        )
+        given(airportRepository.save(airport)).willReturn(airport)
+        given(airportRepository.existsByIata(airport.iata!!)).willReturn(true)
+        given(airportRepository.findAirportByIata(airport.iata!!)).willReturn(Optional.of(airport))
+        airportRepository.save(airport)
+        val result: Optional<Airport> = airportService.getAirport(getMockAirportCode())
+        assertTrue { result.isPresent }
     }
 
     @BeforeAll
