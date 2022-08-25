@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 
+/**
+ * This class communicates with the airport api hosted by rapidapi and developed by
+ * api ninjas.
+ */
 @Service
 class AirportApiService(
     @Autowired webClientBuilder: WebClient.Builder,
@@ -19,10 +23,8 @@ class AirportApiService(
         .build()
 
     /**
-     * Returns a mock [AirportProperties].
-     * The default apiKey and daysUntilStale is 'key' and 0 respectively.
-     * @param baseUrl the url that is injected into the [AirportApiService].
-     * @return mock properties.
+     * Returns a mono of the list of [AirportApiDTO] that corresponds to the
+     * provided [airportCode].
      */
     fun getAirport(airportCode: AirportCode): Mono<List<AirportApiDTO>> {
         return webClient
