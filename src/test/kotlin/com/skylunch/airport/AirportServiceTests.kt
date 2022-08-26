@@ -2,7 +2,7 @@ package com.skylunch.airport
 
 import com.skylunch.airport.airportApi.AirportApiService
 import com.skylunch.airport.airportApi.getMockAirportCode
-import com.skylunch.airport.airportApi.getMockProperties
+import com.skylunch.airport.airportApi.getMockAirportProperties
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -34,7 +34,7 @@ class AirportServiceTests {
 
     @BeforeEach
     fun initialize() {
-        airportProperties = getMockProperties(
+        airportProperties = getMockAirportProperties(
             baseUrl = "${server.url("/v1/airports")}:${server.port}",
             daysUntilStale = 10L,
         )

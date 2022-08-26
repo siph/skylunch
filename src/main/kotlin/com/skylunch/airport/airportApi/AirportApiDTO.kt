@@ -3,7 +3,7 @@ package com.skylunch.airport.airportApi
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 /**
- * Data Transfer Object for the `Api Ninjas Airport Api`.
+ * Data Transfer Object for the 'Api Ninjas Airport Api'.
  * This class omits several unused properties.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)

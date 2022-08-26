@@ -9,7 +9,12 @@ application:
     daysUntilStale: 0
     api:
       apiKey: "k"
-      baseUrl: "u"
+      baseUrl: "http://localhost"
+  restaurant:
+    daysUntilStale: 0
+    api:
+      apiKey: "k"
+      baseUrl: "http://localhost"
   redis:
     host: "localhost"
     port: 6370

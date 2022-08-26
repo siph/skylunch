@@ -28,7 +28,7 @@ class AirportApiServiceTests {
 
     @BeforeEach
     fun initialize() {
-        val properties = getMockProperties("${server.url("/v1/airports")}:${server.port}")
+        val properties = getMockAirportProperties("${server.url("/v1/airports")}:${server.port}")
         airportApiService = AirportApiService(WebClient.builder(), properties)
     }
 
@@ -61,7 +61,7 @@ class AirportApiServiceTests {
  * @param daysUntilStale refresh interval
  * @return mock properties.
  */
-fun getMockProperties(baseUrl: String, daysUntilStale: Long = 0L): AirportProperties {
+fun getMockAirportProperties(baseUrl: String, daysUntilStale: Long = 0L): AirportProperties {
     return AirportProperties(
         api = AirportApiProperties(
             baseUrl = baseUrl,
