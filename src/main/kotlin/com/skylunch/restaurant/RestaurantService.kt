@@ -7,6 +7,8 @@ import org.springframework.data.geo.Distance
 import org.springframework.data.geo.Point
 import org.springframework.data.redis.domain.geo.Metrics
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Flux
+import reactor.kotlin.core.publisher.toFlux
 import java.time.LocalDateTime
 import java.util.*
 
@@ -27,21 +29,26 @@ class RestaurantService(
      * for a new document.
      * @return a list of [Restaurant].
      */
-    fun getRestaurants(location: Point): Iterable<Restaurant> {
+    fun getRestaurants(location: Point): Flux<Restaurant> {
         val restaurants = restaurantRepository.findByLocationNear(
             location,
             Distance(restaurantProperties.radius.toDouble(), Metrics.METERS),
-        ).toMutableSet()
-        if (restaurants.size == 0) {
-            restaurantApiService
-                .getRestaurants(location)
-                .subscribe { saveRestaurants(it).forEach(restaurants::add) }
+        )
+        return when (restaurants.count()) {
+            0 -> {
+                restaurantApiService
+                    .getRestaurants(location)
+                    .map(this::saveRestaurants)
+                    .flatMapMany { Flux.fromIterable(it) }
+            }
+            else -> {
+                restaurants
+                    .map(this::refreshRestaurant)
+                    .filter(Optional<Restaurant>::isPresent)
+                    .map(Optional<Restaurant>::get)
+                    .toFlux()
+            }
         }
-        return restaurants
-            .map { refreshRestaurant(it) }
-            .filter(Optional<Restaurant>::isPresent)
-            .map(Optional<Restaurant>::get)
-            .toList()
     }
 
     private fun refreshRestaurant(restaurant: Restaurant): Optional<Restaurant> {

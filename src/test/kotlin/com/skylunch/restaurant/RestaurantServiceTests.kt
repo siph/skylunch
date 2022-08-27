@@ -70,7 +70,7 @@ class RestaurantServiceTests {
                     )
             ).willReturn(setOf(restaurant))
         restaurantRepository.save(restaurant)
-        val result = restaurantService.getRestaurants(location)
+        val result = restaurantService.getRestaurants(location).toIterable()
         assertThat(result).isNotEmpty
     }
 
