@@ -30,6 +30,8 @@ class RestaurantService(
      * @return a list of [Restaurant].
      */
     fun getRestaurants(location: Point): Flux<Restaurant> {
+        // Because Redis OM uses Jedis to interact with Redis instead of using Lettuce,
+        // this repository call is blocking.
         val restaurants = restaurantRepository.findByLocationNear(
             location,
             Distance(restaurantProperties.radius.toDouble(), Metrics.METERS),

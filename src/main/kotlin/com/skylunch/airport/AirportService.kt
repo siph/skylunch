@@ -4,6 +4,8 @@ import com.skylunch.airport.airportApi.AirportApiDTO
 import com.skylunch.airport.airportApi.AirportApiService
 import org.springframework.data.geo.Point
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toMono
 import java.time.LocalDateTime
 import java.util.*
 
@@ -25,39 +27,39 @@ class AirportService(
      * @return a fresh airport.
      */
     fun getAirport(airportCode: AirportCode): Optional<Airport> {
-        when (airportIsCached(airportCode)) {
-            true -> {
-                findAirport(airportCode).map { refreshAirport(it) }
-            }
-            false -> {
+        return findAirport(airportCode)
+            .map {
+                refreshAirport(it)
+            }.orElseGet {
                 airportApiService
                     .getAirport(airportCode)
-                    .map { it.first() }
-                    .subscribe(this::saveAirport)
+                    .map { saveAirport(it) }
+                    .toMono()
             }
-        }
-        return findAirport(airportCode)
+            .blockOptional()
     }
 
-    private fun refreshAirport(airport: Airport) {
-        if (airportProperties.daysUntilStale == 0L) { return }
+    private fun refreshAirport(airport: Airport): Mono<Airport> {
+        if (airportProperties.daysUntilStale == 0L) { return airport.toMono() }
         val stalenessDate = LocalDateTime.now().minusDays(airportProperties.daysUntilStale)
-        if (airport.modified.isBefore(stalenessDate)) {
-            airportApiService
-                .getAirport(airportToAirportCode(airport))
-                .map { it.first() }
-                .subscribe {
-                    updateAirport(
-                        Airport(
-                            id = airport.id,
-                            iata = it.iata?.uppercase(),
-                            icao = it.icao?.uppercase(),
-                            name = it.name,
-                            location = getPoint(it),
-                            modified = LocalDateTime.now(),
+        return when (airport.modified.isBefore(stalenessDate)) {
+            true -> {
+                airportApiService
+                    .getAirport(airportToAirportCode(airport))
+                    .map {
+                        updateAirport(
+                            Airport(
+                                id = airport.id,
+                                iata = it.iata?.uppercase(),
+                                icao = it.icao?.uppercase(),
+                                name = it.name,
+                                location = getPoint(it),
+                                modified = LocalDateTime.now(),
+                            )
                         )
-                    )
-                }
+                    }.toMono()
+            }
+            false -> airport.toMono()
         }
     }
 
@@ -65,13 +67,6 @@ class AirportService(
         return when (airportCode.codeType) {
             CodeType.IATA -> airportRepository.findAirportByIata(airportCode.code)
             CodeType.ICAO -> airportRepository.findAirportByIcao(airportCode.code)
-        }
-    }
-
-    private fun airportIsCached(airportCode: AirportCode): Boolean {
-        return when (airportCode.codeType) {
-            CodeType.IATA -> airportRepository.existsByIata(airportCode.code)
-            CodeType.ICAO -> airportRepository.existsByIcao(airportCode.code)
         }
     }
 

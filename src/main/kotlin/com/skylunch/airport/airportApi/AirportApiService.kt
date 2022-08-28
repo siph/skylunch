@@ -5,7 +5,7 @@ import com.skylunch.airport.AirportProperties
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
-import reactor.core.publisher.Mono
+import reactor.core.publisher.Flux
 
 /**
  * This class communicates with the airport api hosted by rapidapi and developed by
@@ -23,15 +23,14 @@ class AirportApiService(
         .build()
 
     /**
-     * Returns a mono of the list of [AirportApiDTO] that corresponds to the
+     * Returns a flux of [AirportApiDTO] that corresponds to the
      * provided [airportCode].
      */
-    fun getAirport(airportCode: AirportCode): Mono<List<AirportApiDTO>> {
+    fun getAirport(airportCode: AirportCode): Flux<AirportApiDTO> {
         return webClient
             .get()
             .uri { it.queryParam(airportCode.codeType.string, airportCode.code).build() }
             .retrieve()
             .bodyToFlux(AirportApiDTO::class.java)
-            .collectList()
     }
 }
