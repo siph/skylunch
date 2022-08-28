@@ -11,9 +11,9 @@ The purpose of `Skylunch` is to help aviators find new and interesting destinati
 ### Technologies
 
 `Skylunch` is built using the following technologies:
-    - [Kotlin](https://github.com/JetBrains/kotlin)
-    - [Spring Webflux](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html)
-    - [Redis OM Spring](https://github.com/redis/redis-om-spring)
+ - [Kotlin](https://github.com/JetBrains/kotlin)
+ - [Spring Webflux](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html)
+ - [Redis OM Spring](https://github.com/redis/redis-om-spring)
 
 ### Data Storage and Access
 
