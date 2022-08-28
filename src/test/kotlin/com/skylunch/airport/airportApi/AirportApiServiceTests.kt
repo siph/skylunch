@@ -6,6 +6,7 @@ import com.skylunch.airport.AirportProperties
 import com.skylunch.airport.getAirportCodeType
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.test.StepVerifier
@@ -34,8 +35,8 @@ class AirportApiServiceTests {
 
     @Test
     fun `assert that remote call succeeds`() {
-        val dtos: MutableList<AirportApiDTO> = arrayListOf(getMockAirportApiDTO())
-        val json = ObjectMapper().writeValueAsString(dtos)
+        val dto = getMockAirportApiDTO()
+        val json = ObjectMapper().writeValueAsString(dto)
         val mockResponse = MockResponse()
             .setResponseCode(200)
             .setBody(json)
@@ -44,7 +45,10 @@ class AirportApiServiceTests {
         val airportDto = airportApiService.getAirport(getMockAirportCode())
         server.enqueue(mockResponse)
         StepVerifier.create(airportDto)
-            .expectNextMatches {it.equals(dtos)}
+            .expectNextMatches {
+                assertThat(it).isEqualTo(dto)
+                true
+            }
             .verifyComplete()
 
         val request = server.takeRequest()
