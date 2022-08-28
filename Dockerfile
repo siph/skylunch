@@ -5,5 +5,5 @@ COPY . .
 RUN ./mvnw clean install
 
 FROM adoptopenjdk/openjdk11:alpine
-COPY --from=builder /home/skylunch/app/skylunch/target/*.jar /app.jar
+COPY --from=builder /home/skylunch/app/target/*.jar /app.jar
 ENTRYPOINT ["java", "-jar", "/app.jar"]
