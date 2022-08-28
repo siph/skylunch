@@ -1,0 +1,9 @@
+FROM adoptopenjdk/openjdk11:alpine AS builder
+ENV HOME=/home/skylunch/app/
+WORKDIR $HOME
+COPY . .
+RUN ./mvnw clean install
+
+FROM adoptopenjdk/openjdk11:alpine
+COPY --from=builder /home/skylunch/app/skylunch/target/*.jar /app.jar
+ENTRYPOINT ["java", "-jar", "/app.jar"]
