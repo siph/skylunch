@@ -23,6 +23,16 @@ Data is stored with Redis using [Redis OM Spring](https://github.com/redis/redis
 
 Upon receiving a request, `Skylunch` will search the Redis cache/db for a result before querying the external api. External api calls will then be cached in Redis for subsequent requests.
 
+Geographical searches are performed using the built in functions of Redis OM:
+
+```kotlin
+val restaurants = restaurantRepository.findByLocationNear(
+    location,
+    Distance(restaurantProperties.radius.toDouble(), Metrics.METERS),
+)
+
+```
+
 Local results will also be checked for 'staleness' according to the configuration properties. Results that are older than the threshold age will be re-queried by external api.
 
 ### Note About Blocking Calls in Redis OM Java
