@@ -11,13 +11,6 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 @Configuration
 @EnableRedisRepositories
 class RedisConfiguration {
-    @Bean
-    fun redisConnectionFactory(redisProperties: RedisProperties): LettuceConnectionFactory {
-        return LettuceConnectionFactory(
-            redisProperties.host,
-            redisProperties.port,
-        )
-    }
 
     @Bean
     fun jedisConnectionFactory(redisProperties: RedisProperties): JedisConnectionFactory {
@@ -28,9 +21,9 @@ class RedisConfiguration {
     }
 
     @Bean
-    fun redisTemplate(connectionFactory: LettuceConnectionFactory): RedisTemplate<*, *> {
+    fun redisTemplate(connectionFactory: JedisConnectionFactory): RedisTemplate<*, *> {
         val template = RedisTemplate<ByteArray, ByteArray>()
-        template.setConnectionFactory(connectionFactory);
+        template.setConnectionFactory(connectionFactory)
         return template
     }
 }
