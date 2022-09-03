@@ -1,7 +1,8 @@
 package com.skylunch.restaurant.restaurantApi
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.skylunch.airport.airportApi.AirportApiService
+import com.skylunch.getMockRestaurantApiDTO
+import com.skylunch.getMockRestaurantProperties
 import com.skylunch.restaurant.RestaurantProperties
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -59,48 +60,4 @@ class RestaurantApiServiceTests {
         assertThat(request.path).contains("radius=${properties.radius}")
         assertThat(request.path).contains("key=key")
     }
-}
-
-/**
- * Returns a mock [RestaurantProperties].
- * The default apiKey and daysUntilStale is 'key' and 0 respectively.
- * @param baseUrl the url that is injected into the [AirportApiService].
- * @param daysUntilStale refresh interval
- * @return mock properties.
- */
-fun getMockRestaurantProperties(baseUrl: String, daysUntilStale: Long = 0L): RestaurantProperties {
-    return RestaurantProperties(
-        api = RestaurantApiProperties(
-            baseUrl = baseUrl,
-            apiKey = "key",
-        ),
-        daysUntilStale = daysUntilStale,
-    )
-}
-/**
- * Returns a mock [RestaurantApiDTO].
- * The default value is the actual returned value for 'lax'.
- * @return mock [RestaurantApiDTO].
- */
-fun getMockRestaurantApiDTO(): RestaurantApiDTO {
-    return RestaurantApiDTO(
-        status = "OK",
-        results = arrayListOf(
-            Place(
-                address = "123 street",
-                phoneNumber = "number",
-                rating = "rating",
-                totalRating = "total rating",
-                url = "google url",
-                website = "website",
-                name = "restaurant",
-                geometry = Geometry(
-                    location = LatLngLiteral(
-                        lat = 38.8409,
-                        lng = 105.0423,
-                    )
-                )
-            )
-        )
-    )
 }
