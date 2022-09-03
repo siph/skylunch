@@ -26,7 +26,7 @@ class AirportService(
      * for a new document.
      * @return a fresh airport.
      */
-    fun getAirport(airportCode: AirportCode): Optional<Airport> {
+    fun getAirport(airportCode: AirportCode): Mono<Airport> {
         return findAirport(airportCode)
             .map {
                 refreshAirport(it)
@@ -36,7 +36,6 @@ class AirportService(
                     .map { saveAirport(it) }
                     .toMono()
             }
-            .blockOptional()
     }
 
     private fun refreshAirport(airport: Airport): Mono<Airport> {

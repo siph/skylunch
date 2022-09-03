@@ -1,0 +1,16 @@
+type Query {
+    restaurantsByCode(code: String): [Restaurant]
+}
+
+type Restaurant {
+    id: ID!
+    address: String
+    phoneNumber: String
+    name: String
+    rating: String
+    url: String
+    totalRating: String
+    website: String
+    location: String!
+    modified: String!
+}

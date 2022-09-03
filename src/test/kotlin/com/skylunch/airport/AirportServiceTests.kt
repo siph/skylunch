@@ -50,8 +50,11 @@ import java.time.LocalDateTime
     fun `assert airport is found`(){
         val airport = getMockAirport()
         airportRepository.save(airport)
-        assertThat(airportService.getAirport(AirportCode(code = "LAX", codeType = getAirportCodeType("LAX"))).isPresent)
-            .isTrue
+        assertThat(
+            airportService.getAirport(
+                AirportCode(code = "LAX", codeType = getAirportCodeType("LAX"))
+            ).block()
+        ).isNotNull
     }
 
     @Test
@@ -63,7 +66,7 @@ import java.time.LocalDateTime
         val mockResponse = getMockResponseOK(json)
         server.enqueue(mockResponse)
         val updatedAirport = airportService
-            .getAirport(AirportCode(code = "lax", codeType = getAirportCodeType("lax"))).get()
+            .getAirport(AirportCode(code = "lax", codeType = getAirportCodeType("lax"))).block()!!
         assertThat(updatedAirport.modified).isAfter(staleDate)
     }
 
@@ -74,8 +77,8 @@ import java.time.LocalDateTime
         val json = "[]"
         val mockResponse = getMockResponseOK(json)
         server.enqueue(mockResponse)
-        val maybeAirport = airportService
-            .getAirport(AirportCode(code = "dia", codeType = getAirportCodeType("dia")))
-        assertThat(maybeAirport).isEmpty
+        assertThat(
+            airportService.getAirport(AirportCode(code = "dia", codeType = getAirportCodeType("dia"))).block()
+        ).isNull()
     }
 }

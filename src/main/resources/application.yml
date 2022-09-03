@@ -1,4 +1,7 @@
 spring:
+  graphql:
+    graphiql:
+      enabled: true
   redis:
     host: "localhost"
     port: 6370
