@@ -8,9 +8,10 @@ import org.springframework.data.geo.Point
 import org.springframework.data.redis.domain.geo.Metrics
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toFlux
+import reactor.kotlin.core.publisher.toMono
 import java.time.LocalDateTime
-import java.util.*
 
 /**
  * Service layer to interact with the [restaurantRepository] and remote [restaurantApiService].
@@ -45,30 +46,19 @@ class RestaurantService(
             }
             else -> {
                 restaurants
-                    .map(this::refreshRestaurant)
-                    .filter(Optional<Restaurant>::isPresent)
-                    .map(Optional<Restaurant>::get)
                     .toFlux()
+                    .flatMap(this::refreshRestaurant)
             }
         }
     }
 
-    private fun refreshRestaurant(restaurant: Restaurant): Optional<Restaurant> {
+    private fun refreshRestaurant(restaurant: Restaurant): Mono<Restaurant> {
         val stalenessDate = LocalDateTime.now().minusDays(restaurantProperties.daysUntilStale)
-        val isStale: Boolean = restaurant.modified.isBefore(stalenessDate)
-        if (restaurantProperties.daysUntilStale == 0L || !isStale) { return Optional.of(restaurant) }
-        lateinit var updatedRestaurant: Optional<Restaurant>
-        restaurantApiService.getRestaurant(restaurant)
-            .subscribe{
-                updatedRestaurant = when (it.candidates.isEmpty()) {
-                    true -> Optional.empty<Restaurant>()
-                    false -> {
-                        val place = it.candidates.first()
-                        Optional.of(saveRestaurant(place = place, id = restaurant.id))
-                    }
-                }
-            }
-        return updatedRestaurant
+        val isStale = restaurant.modified.isBefore(stalenessDate)
+        if (restaurantProperties.daysUntilStale == 0L || !isStale) { return restaurant.toMono() }
+        return restaurantApiService.getRestaurant(restaurant)
+            .map { it.candidates.first() }
+            .map { saveRestaurant(it, restaurant.id) }
     }
 
     private fun saveRestaurants(restaurantApiDTO: RestaurantApiDTO): Iterable<Restaurant> {
