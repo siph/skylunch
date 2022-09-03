@@ -14,6 +14,7 @@ The purpose of `Skylunch` is to help aviators find new and interesting destinati
  - [Kotlin](https://github.com/JetBrains/kotlin)
  - [Spring Webflux](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html)
  - [Redis OM Spring](https://github.com/redis/redis-om-spring)
+ - [Spring for GraphQL](https://spring.io/projects/spring-graphql#overview)
 
 ### Data Storage and Access
 
@@ -23,7 +24,7 @@ Data is stored with Redis using [Redis OM Spring](https://github.com/redis/redis
 
 Upon receiving a request, `Skylunch` will search the Redis cache/db for a result before querying the external api. External api calls will then be cached in Redis for subsequent requests.
 
-Geographical searches are performed using the built in functions of Redis OM:
+Geographical searches are performed using the built-in functions of Redis OM:
 
 ```kotlin
 val restaurants = restaurantRepository.findByLocationNear(
@@ -38,6 +39,18 @@ Local results will also be checked for 'staleness' according to the configuratio
 ### Note About Blocking Calls in Redis OM Java
 
 As of version `0.5.1`, a fully non-blocking application is not possible using the Redis OM. This is because Redis OM uses the [Jedis](https://github.com/redis/jedis) library instead of the non-blocking [Lettuce](https://github.com/lettuce-io/lettuce-core) library to access Redis. Therefore, calls to the repository will be blocking.
+
+## Try It Out
+
+### Graphql
+
+The application exposes the `/graphiql` endpoint which can be used to test the application and explore the schema.
+Queries are then made via `/graphql`.
+
+### Http
+
+A typical http endpoint is also provided and can be used at `/api/v1/search?code=<ICAO or IATA>`.
+Example: `/api/v1/search?code=lax`.
 
 ## Deployment
 
