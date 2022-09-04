@@ -1,16 +1,62 @@
 type Query {
+    """
+    Accepts an ICAO or IATA airport code and returns restaurants that are within five nautical miles.
+    """
     restaurantsByCode(code: String): [Restaurant]
 }
 
+"""
+GPS coordinates.
+"""
+type Coords {
+    """
+    Y-coordinate.
+    """
+    latitude: String,
+    """
+    X-coordinate.
+    """
+    longitude: String
+}
+
+"""
+Restaurant data object.
+"""
 type Restaurant {
-    id: ID!
+    """
+    Street address.
+    """
     address: String
+    """
+    Restaurant phone number.
+    """
     phoneNumber: String
+    """
+    Restaurant name.
+    """
     name: String
+    """
+    0 - 5 star rating.
+    """
     rating: String
+    """
+    Points to google result for restaurant.
+    """
     url: String
+    """
+    Number of user submitted reviews.
+    """
     totalRating: String
+    """
+    Restaurants website.
+    """
     website: String
-    location: String!
+    """
+    Latitude and longitude coordinates.
+    """
+    coords: Coords!
+    """
+    When the restaurant was last queried externally.
+    """
     modified: String!
 }
