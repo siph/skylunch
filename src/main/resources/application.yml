@@ -18,6 +18,3 @@ application:
     api:
       apiKey: "k"
       baseUrl: "http://localhost"
-  redis:
-    host: "localhost"
-    port: 6370

@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.skylunch</groupId>
     <artifactId>skylunch</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0</version>
     <name>skylunch</name>
     <description>skylunch</description>
     <properties>
