@@ -3,6 +3,7 @@ package com.skylunch.restaurant
 import com.skylunch.restaurant.restaurantApi.Place
 import com.skylunch.restaurant.restaurantApi.RestaurantApiDTO
 import com.skylunch.restaurant.restaurantApi.RestaurantApiService
+import org.slf4j.LoggerFactory
 import org.springframework.data.geo.Distance
 import org.springframework.data.geo.Point
 import org.springframework.data.redis.domain.geo.Metrics
@@ -22,6 +23,9 @@ class RestaurantService(
     private val restaurantRepository: RestaurantRepository,
     private val restaurantApiService: RestaurantApiService,
 ) {
+    companion object {
+        val log = LoggerFactory.getLogger(RestaurantService::class.java)
+    }
 
     /**
      * Will search the repository for a collection of [Restaurant] documents using the [location]. If a
@@ -31,6 +35,7 @@ class RestaurantService(
      * @return a list of [Restaurant].
      */
     fun getRestaurants(location: Point): Flux<Restaurant> {
+        log.debug("Query received for restaurants near location: {}", location)
         // Because Redis OM uses Jedis to interact with Redis instead of using Lettuce,
         // this repository call is blocking.
         val restaurants = restaurantRepository.findByLocationNear(
@@ -53,6 +58,7 @@ class RestaurantService(
     }
 
     private fun refreshRestaurant(restaurant: Restaurant): Mono<Restaurant> {
+        log.debug("Refreshing attempt on restaurant: {}", restaurant)
         val stalenessDate = LocalDateTime.now().minusDays(restaurantProperties.daysUntilStale)
         val isStale = restaurant.modified.isBefore(stalenessDate)
         if (restaurantProperties.daysUntilStale == 0L || !isStale) { return restaurant.toMono() }
@@ -62,10 +68,12 @@ class RestaurantService(
     }
 
     private fun saveRestaurants(restaurantApiDTO: RestaurantApiDTO): Iterable<Restaurant> {
+        log.trace("Saving restaurant from dto: {}", restaurantApiDTO)
         return restaurantApiDTO.results.map { saveRestaurant(it) }
     }
 
     private fun saveRestaurant(place: Place, id: String = ""): Restaurant {
+        log.trace("Saving restaurant from place: {}", place)
         return restaurantRepository.save(
             Restaurant(
                 id = id,

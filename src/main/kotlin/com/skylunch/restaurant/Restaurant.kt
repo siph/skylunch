@@ -16,7 +16,7 @@ class Restaurant(
     @Indexed
     val id: String = "",
     @Indexed
-    val address: String,
+    val address: String?,
     @Indexed
     val phoneNumber: String?,
     @Indexed

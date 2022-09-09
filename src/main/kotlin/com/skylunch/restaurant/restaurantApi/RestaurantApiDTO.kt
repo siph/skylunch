@@ -26,7 +26,7 @@ data class RestaurantApiDTO(
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class Place(
     @get:JsonProperty("formatted_address")
-    val address: String,
+    val address: String?,
     @get:JsonProperty("formatted_phone_number")
     val phoneNumber: String?,
     @get:JsonProperty("geometry")
@@ -37,7 +37,7 @@ data class Place(
     val rating: String?,
     @get:JsonProperty("url")
     val url: String?,
-    @get:JsonProperty("user_rating_total")
+    @get:JsonProperty("user_ratings_total")
     val totalRating: String?,
     @get:JsonProperty("website")
     val website: String?,

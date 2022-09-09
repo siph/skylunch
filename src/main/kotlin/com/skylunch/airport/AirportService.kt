@@ -2,6 +2,7 @@ package com.skylunch.airport
 
 import com.skylunch.airport.airportApi.AirportApiDTO
 import com.skylunch.airport.airportApi.AirportApiService
+import org.slf4j.LoggerFactory
 import org.springframework.data.geo.Point
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
@@ -18,6 +19,9 @@ class AirportService(
     private val airportRepository: AirportRepository,
     private val airportProperties: AirportProperties,
 ) {
+    companion object {
+        val log = LoggerFactory.getLogger(AirportService::class.java)
+    }
 
     /**
      * Will search the repository for an [Airport] document using the [airportCode]. If a document is
@@ -27,6 +31,7 @@ class AirportService(
      * @return a fresh airport.
      */
     fun getAirport(airportCode: AirportCode): Mono<Airport> {
+        log.debug("Query received for airport with code: {}", airportCode)
         return findAirport(airportCode)
             .map {
                 refreshAirport(it)
@@ -39,10 +44,15 @@ class AirportService(
     }
 
     private fun refreshAirport(airport: Airport): Mono<Airport> {
-        if (airportProperties.daysUntilStale == 0L) { return airport.toMono() }
+        log.debug("Refreshing attempt on airport: {}", airport)
+        if (airportProperties.daysUntilStale == 0L) {
+            log.trace("Freshness checking disable by properties: {}", airportProperties)
+            return airport.toMono()
+        }
         val stalenessDate = LocalDateTime.now().minusDays(airportProperties.daysUntilStale)
         return when (airport.modified.isBefore(stalenessDate)) {
             true -> {
+                log.trace("Attempting refresh on airport: {}", airport)
                 airportApiService
                     .getAirport(airportToAirportCode(airport))
                     .map {
@@ -58,7 +68,10 @@ class AirportService(
                         )
                     }.toMono()
             }
-            false -> airport.toMono()
+            false -> {
+                log.debug("Airport still fresh")
+                airport.toMono()
+            }
         }
     }
 
@@ -70,6 +83,7 @@ class AirportService(
     }
 
     private fun saveAirport(airportApiDTO: AirportApiDTO): Airport {
+        log.trace("Saving airport from dto: {}", airportApiDTO)
         return airportRepository.save(
             Airport(
                 iata = airportApiDTO.iata,
@@ -82,6 +96,7 @@ class AirportService(
     }
 
     private fun updateAirport(airport: Airport): Airport {
+        log.trace("Updating airport: {}", airport)
         return airportRepository.save(airport)
     }
 

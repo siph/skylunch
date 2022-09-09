@@ -18,3 +18,13 @@ application:
     api:
       apiKey: "k"
       baseUrl: "http://localhost"
+#logging:
+#  level:
+#    root: "trace"
+#    com:
+#      skylunch: "debug"
+logging:
+  level:
+    web: "debug"
+    com:
+      skylunch: "debug"
