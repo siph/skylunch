@@ -1,0 +1,22 @@
+name: "Building Image"
+on:
+  push:
+    branches:
+      - master
+jobs:
+  tests:
+    uses: ./.github/workflows/service-tests.yaml
+  deploy:
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v18
+      with:
+        github_access_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: docker login
+      run: nix develop --command docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: build docker image
+      run: nix develop --command docker build -t siph/skylunch:latest -f ./Dockerfile .
+    - name: push docker image
+      run: nix develop --command docker push siph/skylunch:latest
