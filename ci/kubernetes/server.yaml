@@ -1,4 +1,4 @@
-#digitalocean-simple-k3s-setup
+#cloud-config
 write_files:
 - path: /etc/nixos/host.nix
   permissions: '0644'
@@ -6,7 +6,7 @@ write_files:
     {pkgs, ...}:
     {
       networking.firewall.allowedTCPPorts = [ 6443 ];
-      environment.systemPackages = with pkgs; [ neovim k3s git ];
+      environment.systemPackages = with pkgs; [ k3s bottom ];
       services = {
         k3s = {
           enable = true;
@@ -20,14 +20,6 @@ write_files:
           defaultEditor = true;
           vimAlias = true;
         };
-        zsh = {
-          enable = true;
-          enableCompletion = true;
-          autosuggestions.enable = true;
-          syntaxHighlighting.enable = true;
-        };
-      };
-      users.defaultUserShell = pkgs.zsh;
     }
 runcmd:
-  - curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | PROVIDER=digitalocean NIXOS_IMPORT=./host.nix NIX_CHANNEL=nixos-22.05 bash 2>&1 | tee /tmp/infect.log
+  - curl https://raw.githubusercontent.com/elitak/nixos-infect/master/nixos-infect | PROVIDER=digitalocean NIXOS_IMPORT=./host.nix NIX_CHANNEL=nixos-22.11 bash 2>&1 | tee /tmp/infect.log
