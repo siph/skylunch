@@ -10,7 +10,7 @@ write_files:
       services = {
         k3s = {
           enable = true;
-          disableAgent = true;
+          disableAgent = false;
           role = "server";
         };
       };
