@@ -1,4 +1,4 @@
-name: "Service Tests"
+name: "Tests"
 on:
   workflow_call:
   pull_request:
@@ -11,7 +11,7 @@ jobs:
     - uses: cachix/install-nix-action@v18
       with:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
-    - name: build
+    - name: maven build
       run: nix develop --command mvn install -DskipTests=true
     - name: restaurant tests
       run: nix develop --command mvn test -Dtest=RestaurantServiceTests

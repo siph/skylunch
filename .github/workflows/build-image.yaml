@@ -1,4 +1,4 @@
-name: "Building Image"
+name: "Build Image"
 on:
   push:
     branches:
