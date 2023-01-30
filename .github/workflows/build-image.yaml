@@ -6,17 +6,24 @@ on:
 jobs:
   tests:
     uses: ./.github/workflows/service-tests.yaml
-  deploy:
+  docker:
     runs-on: ubuntu-latest
     needs: tests
     steps:
-    - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v18
-      with:
-        github_access_token: ${{ secrets.GITHUB_TOKEN }}
-    - name: docker login
-      run: nix develop --command docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: build docker image
-      run: nix develop --command docker build -t siph/skylunch:latest -f ./Dockerfile .
-    - name: push docker image
-      run: nix develop --command docker push siph/skylunch:latest
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: siph/skylunch:latest
