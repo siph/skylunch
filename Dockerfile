@@ -1,9 +1,8 @@
-FROM adoptopenjdk/openjdk11:alpine AS builder
+FROM nixos/nix:latest
 ENV HOME=/home/skylunch/app/
 WORKDIR $HOME
 COPY . .
-RUN ./mvnw clean install -DskipTests
-
-FROM adoptopenjdk/openjdk11:alpine
-COPY --from=builder /home/skylunch/app/target/*.jar /app.jar
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENV NIX_CONFIG='extra-experimental-features = nix-command flakes'
+RUN nix develop --command mvn install -DskipTests=true
+RUN cp /home/skylunch/app/target/*.jar /skylunch.jar
+ENTRYPOINT ["nix", "develop", "--command", "java", "-jar", "/skylunch.jar"]
