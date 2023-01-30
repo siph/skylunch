@@ -19,7 +19,7 @@
           skylunch = pkgs.stdenv.mkDerivation {
             name = "skylunch";
             src = ./.;
-            buildInputs = with pkgs; [ jdk11 maven ];
+            buildInputs = with pkgs; [ openjdk11_headless maven ];
             buildPhase = "mvn clean install -Dmaven.repo.local=$out -DskipTests=true";
             installPhase = ''
               find $out -type f \
@@ -41,11 +41,8 @@
         };
         devShell = with pkgs;
           mkShell {
-            buildInputs = [
-              docker
-              doctl
-              jdk11
-              kubectl
+            nativeBuildInputs = [
+              openjdk11_headless
               maven
             ];
           };
