@@ -33,12 +33,12 @@ is available and can be configured in this deployment but this configuration use
 cloud service to simplify the deployment and data management.
 
 ### Secrets
+
 Secrets can be placed in `secrets.yaml` and must be base64 encoded.
 
 ```shell
 echo secret | base64
 ```
-
 
 ## NixOS
 

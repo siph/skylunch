@@ -33,7 +33,6 @@ val restaurants = restaurantRepository.findByLocationNear(
     location,
     Distance(restaurantProperties.radius.toDouble(), Metrics.METERS),
 )
-
 ```
 
 Local results will also be checked for 'staleness' according to the configuration properties. Results that are older than the threshold age will be re-queried by external api.
@@ -56,13 +55,4 @@ Example: `/api/v1/search?code=lax`.
 
 ## Deployment
 
-### Docker Compose
-
-For simple deployments a `docker-compose.yml` is provided in the repo. Just edit `start.sh` with your appropriate api keys.
-
-```bash
-./start.sh
-```
-
-## More Information about Redis Stack
-1. [Developer Hub](https://redis.info/devhub) - The main developer page for Redis, where you can find information on building using Redis with sample projects, guides, and tutorials.
+The infrastructure and deployment are covered in their own [Readme](ci/README.md).
