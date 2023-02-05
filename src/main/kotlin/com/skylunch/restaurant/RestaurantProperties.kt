@@ -25,6 +25,5 @@ class RestaurantProperties(
     val daysUntilStale: Long,
     @Min(1)
     @Max(50_000)
-    val radius: Long = 9260L,
+    val radius: Long = 9260L
 )
-

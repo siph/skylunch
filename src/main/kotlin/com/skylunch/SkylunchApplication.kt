@@ -8,10 +8,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 
 @EnableRedisDocumentRepositories
-@EnableConfigurationProperties(value = [
-    AirportProperties::class,
-    RestaurantProperties::class,
-])
+@EnableConfigurationProperties(
+    value = [
+        AirportProperties::class,
+        RestaurantProperties::class
+    ]
+)
 @SpringBootApplication
 class SkylunchApplication
 

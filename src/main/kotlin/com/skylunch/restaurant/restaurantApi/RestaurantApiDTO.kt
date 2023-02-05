@@ -14,7 +14,7 @@ data class RestaurantApiDTO(
     @get:JsonProperty("results")
     val results: List<Place>,
     @get:JsonProperty("status")
-    val status: String?,
+    val status: String?
 )
 
 /**
@@ -40,13 +40,13 @@ data class Place(
     @get:JsonProperty("user_ratings_total")
     val totalRating: String?,
     @get:JsonProperty("website")
-    val website: String?,
+    val website: String?
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class Geometry(
     @get:JsonProperty("location")
-    val location: LatLngLiteral,
+    val location: LatLngLiteral
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -54,10 +54,11 @@ data class LatLngLiteral(
     @get:JsonProperty("lat")
     val lat: Double,
     @get:JsonProperty("lng")
-    val lng: Double,
+    val lng: Double
 )
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class CandidatesDTO(
     @get:JsonProperty("candidates")
-    val candidates: List<Place>,
+    val candidates: List<Place>
 )

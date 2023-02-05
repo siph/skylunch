@@ -32,5 +32,5 @@ class Restaurant(
     @Indexed
     val location: Point,
     @Indexed
-    var modified: LocalDateTime = LocalDateTime.now(),
+    var modified: LocalDateTime = LocalDateTime.now()
 )

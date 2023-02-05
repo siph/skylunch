@@ -28,7 +28,7 @@ class SearchHandler(private val searchService: SearchService) {
                     .body(
                         BodyInserters.fromProducer(
                             searchService.findRestaurantsByAirportCode(code).map { it.toSearchDTO() },
-                            object: ParameterizedTypeReference<List<SearchDTO>>() {}
+                            object : ParameterizedTypeReference<List<SearchDTO>>() {}
                         )
                     )
             }.orElseGet {

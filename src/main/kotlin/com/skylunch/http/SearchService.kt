@@ -12,7 +12,7 @@ import reactor.kotlin.core.publisher.toFlux
 @Service
 class SearchService(
     private val airportService: AirportService,
-    private val restaurantService: RestaurantService,
+    private val restaurantService: RestaurantService
 ) {
     fun findRestaurantsByAirportCode(code: String): Flux<Restaurant> {
         return airportService.getAirport(AirportCode(code, getAirportCodeType(code)))

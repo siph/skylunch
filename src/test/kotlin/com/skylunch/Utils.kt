@@ -8,7 +8,12 @@ import com.skylunch.airport.airportApi.AirportApiProperties
 import com.skylunch.airport.airportApi.AirportApiService
 import com.skylunch.airport.getAirportCodeType
 import com.skylunch.restaurant.RestaurantProperties
-import com.skylunch.restaurant.restaurantApi.*
+import com.skylunch.restaurant.restaurantApi.CandidatesDTO
+import com.skylunch.restaurant.restaurantApi.Geometry
+import com.skylunch.restaurant.restaurantApi.LatLngLiteral
+import com.skylunch.restaurant.restaurantApi.Place
+import com.skylunch.restaurant.restaurantApi.RestaurantApiDTO
+import com.skylunch.restaurant.restaurantApi.RestaurantApiProperties
 import okhttp3.mockwebserver.MockResponse
 import org.springframework.data.geo.Point
 import org.springframework.web.reactive.function.client.WebClient
@@ -55,7 +60,7 @@ fun getMockAirportProperties(baseUrl: String, daysUntilStale: Long = 0L): Airpor
     return AirportProperties(
         api = AirportApiProperties(
             baseUrl = baseUrl,
-            apiKey = "key",
+            apiKey = "key"
         ),
         daysUntilStale = daysUntilStale
     )
@@ -82,7 +87,7 @@ fun getMockAirportApiDTO(): AirportApiDTO {
         iata = "LAX",
         name = "Los Angeles International Airport",
         latitude = "33.94250107",
-        longitude = "-118.4079971",
+        longitude = "-118.4079971"
     )
 }
 
@@ -97,9 +102,9 @@ fun getMockRestaurantProperties(baseUrl: String, daysUntilStale: Long = 0L): Res
     return RestaurantProperties(
         api = RestaurantApiProperties(
             baseUrl = baseUrl,
-            apiKey = "key",
+            apiKey = "key"
         ),
-        daysUntilStale = daysUntilStale,
+        daysUntilStale = daysUntilStale
     )
 }
 
@@ -111,7 +116,7 @@ fun getMockRestaurantProperties(baseUrl: String, daysUntilStale: Long = 0L): Res
 fun getMockRestaurantApiDTO(): RestaurantApiDTO {
     return RestaurantApiDTO(
         status = "OK",
-        results = arrayListOf(getMockPlace()),
+        results = arrayListOf(getMockPlace())
     )
 }
 
@@ -139,7 +144,7 @@ fun getMockPlace(): Place {
         geometry = Geometry(
             location = LatLngLiteral(
                 lat = 38.8409,
-                lng = 105.0423,
+                lng = 105.0423
             )
         )
     )

@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 class RestaurantService(
     private val restaurantProperties: RestaurantProperties,
     private val restaurantRepository: RestaurantRepository,
-    private val restaurantApiService: RestaurantApiService,
+    private val restaurantApiService: RestaurantApiService
 ) {
     companion object {
         val log = LoggerFactory.getLogger(RestaurantService::class.java)
@@ -40,7 +40,7 @@ class RestaurantService(
         // this repository call is blocking.
         val restaurants = restaurantRepository.findByLocationNear(
             location,
-            Distance(restaurantProperties.radius.toDouble(), Metrics.METERS),
+            Distance(restaurantProperties.radius.toDouble(), Metrics.METERS)
         )
         return when (restaurants.count()) {
             0 -> {
@@ -86,7 +86,7 @@ class RestaurantService(
                 website = place.website,
                 location = Point(
                     place.geometry.location.lat,
-                    place.geometry.location.lng,
+                    place.geometry.location.lng
                 )
             )
         )

@@ -17,7 +17,7 @@ import java.util.*
 class AirportService(
     private val airportApiService: AirportApiService,
     private val airportRepository: AirportRepository,
-    private val airportProperties: AirportProperties,
+    private val airportProperties: AirportProperties
 ) {
     companion object {
         val log = LoggerFactory.getLogger(AirportService::class.java)
@@ -63,7 +63,7 @@ class AirportService(
                                 icao = it.icao,
                                 name = it.name,
                                 location = getPoint(it),
-                                modified = LocalDateTime.now(),
+                                modified = LocalDateTime.now()
                             )
                         )
                     }.toMono()
@@ -90,7 +90,7 @@ class AirportService(
                 icao = airportApiDTO.icao,
                 name = airportApiDTO.name,
                 location = getPoint(airportApiDTO),
-                modified = LocalDateTime.now(),
+                modified = LocalDateTime.now()
             )
         )
     }

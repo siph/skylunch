@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono
 @Service
 class RestaurantApiService(
     @Autowired private val webClientBuilder: WebClient.Builder,
-    @Autowired private val restaurantProperties: RestaurantProperties,
+    @Autowired private val restaurantProperties: RestaurantProperties
 ) {
     companion object {
         val log = LoggerFactory.getLogger(RestaurantApiService::class.java)
