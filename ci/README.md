@@ -34,7 +34,7 @@ cloud service to simplify the deployment and data management.
 
 ### Secrets
 
-Secrets can be placed in `secrets.yaml` and must be base64 encoded.
+Secrets can be placed in [`secrets.yaml`](kubernetes/skylunch/secrets.yaml) and must be base64 encoded.
 
 ```shell
 echo secret | base64
@@ -66,7 +66,8 @@ docker images, and digitalocean images. While an example of this does exist in t
 infrastructure after creation. 
 
 [`nixos-infect`](https://github.com/elitak/nixos-infect) is a tool that can convert a non-NixOS
-install into a NixOS system. A `cloud-config` exists in `skylunch-userdata.yaml` where the infect
+install into a NixOS system. A `cloud-config` exists in
+[`skylunch-userdata.yaml`](server/skylunch-userdata.yaml) where the infect
 script and system configuration are applied to the droplet at creation time either with `doctl`
 or the web interface. This will turn a default Ubuntu-22.04 server into the NixOS configuration
 which is then ready to start receiving kubernetes objects.
