@@ -12,5 +12,5 @@ data class AirportApiDTO(
     val iata: String?,
     val name: String?,
     val latitude: String,
-    val longitude: String,
+    val longitude: String
 )

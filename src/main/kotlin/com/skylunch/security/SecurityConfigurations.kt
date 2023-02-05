@@ -19,7 +19,7 @@ class SecurityConfigurations {
             .pathMatchers(
                 "/api/v1/search",
                 "/graphql",
-                "/graphiql**",
+                "/graphiql**"
             )
             .permitAll()
             .and()

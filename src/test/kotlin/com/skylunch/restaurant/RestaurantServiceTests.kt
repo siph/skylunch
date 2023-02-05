@@ -8,14 +8,18 @@ import com.skylunch.getMockRestaurantProperties
 import com.skylunch.restaurant.restaurantApi.RestaurantApiService
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.geo.Point
 import org.springframework.web.reactive.function.client.WebClient
 import java.time.LocalDateTime
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class RestaurantServiceTests: AbstractBaseDocumentTest() {
+class RestaurantServiceTests : AbstractBaseDocumentTest() {
 
     @Autowired
     lateinit var restaurantRepository: RestaurantRepository
@@ -30,13 +34,13 @@ class RestaurantServiceTests: AbstractBaseDocumentTest() {
         server.start()
         val restaurantProperties = getMockRestaurantProperties(
             baseUrl = "${server.url("/maps/api/place")}",
-            daysUntilStale = 10L,
+            daysUntilStale = 10L
         )
         val restaurantApiService = RestaurantApiService(WebClient.builder(), restaurantProperties)
         restaurantService = RestaurantService(
             restaurantProperties = restaurantProperties,
             restaurantRepository = restaurantRepository,
-            restaurantApiService = restaurantApiService,
+            restaurantApiService = restaurantApiService
         )
     }
 
@@ -59,7 +63,7 @@ class RestaurantServiceTests: AbstractBaseDocumentTest() {
     }
 
     @Test
-    fun `assert restaurant is updated`(){
+    fun `assert restaurant is updated`() {
         val staleDate = LocalDateTime.now().minusDays(35L)
         val restaurant = restaurantRepository.save(getMockRestaurant(staleDate))
         val json = ObjectMapper().writeValueAsString(getMockCandidatesDTO())
@@ -73,7 +77,7 @@ class RestaurantServiceTests: AbstractBaseDocumentTest() {
 
     private fun getMockRestaurant(
         modified: LocalDateTime = LocalDateTime.now(),
-        location: Point = Point("-118.4079971".toDouble(), "33.94250107".toDouble()),
+        location: Point = Point("-118.4079971".toDouble(), "33.94250107".toDouble())
     ): Restaurant {
         return Restaurant(
             id = "one",
@@ -85,7 +89,7 @@ class RestaurantServiceTests: AbstractBaseDocumentTest() {
             url = "b.c",
             website = "google.com",
             location = location,
-            modified = modified,
+            modified = modified
         )
     }
 }

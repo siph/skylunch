@@ -8,7 +8,7 @@ import com.skylunch.airport.CodeType.ICAO
  */
 data class AirportCode(
     val code: String,
-    val codeType: CodeType,
+    val codeType: CodeType
 )
 
 /**
@@ -16,7 +16,7 @@ data class AirportCode(
  */
 enum class CodeType(val string: String) {
     IATA("iata"),
-    ICAO("icao"),
+    ICAO("icao")
 }
 
 /**

@@ -15,7 +15,7 @@ import reactor.core.publisher.Flux
 @Service
 class AirportApiService(
     @Autowired webClientBuilder: WebClient.Builder,
-    @Autowired private val airportProperties: AirportProperties,
+    @Autowired private val airportProperties: AirportProperties
 ) {
     companion object {
         val log = LoggerFactory.getLogger(AirportApiService::class.java)

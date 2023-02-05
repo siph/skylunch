@@ -10,12 +10,12 @@ data class SearchDTO(
     val url: String?,
     val totalRating: String?,
     val website: String?,
-    val coords: Coords,
+    val coords: Coords
 )
 
 data class Coords(
     val latitude: String,
-    val longitude: String,
+    val longitude: String
 )
 
 fun Restaurant.toSearchDTO(): SearchDTO {
@@ -29,7 +29,7 @@ fun Restaurant.toSearchDTO(): SearchDTO {
         website = this.website,
         coords = Coords(
             latitude = this.location.y.toString(),
-            longitude = this.location.x.toString(),
+            longitude = this.location.x.toString()
         )
     )
 }

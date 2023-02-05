@@ -7,5 +7,5 @@ package com.skylunch.restaurant.restaurantApi
  */
 class RestaurantApiProperties(
     val baseUrl: String,
-    val apiKey: String,
+    val apiKey: String
 )

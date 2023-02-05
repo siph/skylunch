@@ -19,5 +19,5 @@ import org.springframework.validation.annotation.Validated
 class AirportProperties(
     val api: AirportApiProperties,
     @Min(0)
-    val daysUntilStale: Long,
+    val daysUntilStale: Long
 )
