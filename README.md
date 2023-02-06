@@ -1,4 +1,4 @@
-![tests workflow](https://github.com/siph/skylunch/actions/workflows/service-tests.yaml/badge.svg)
+![tests workflow](https://github.com/siph/skylunch/actions/workflows/tests.yaml/badge.svg)
 ![image workflow](https://github.com/siph/skylunch/actions/workflows/build-image.yaml/badge.svg)
 # Skylunch
 
