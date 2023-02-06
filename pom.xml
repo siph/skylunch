@@ -147,6 +147,7 @@
                   <id>check</id>
                   <goals>
                     <goal>check</goal>
+                    <goal>format</goal>
                   </goals>
                 </execution>
               </executions>
