@@ -2,6 +2,7 @@ package com.skylunch
 
 import com.redis.om.spring.annotations.EnableRedisDocumentRepositories
 import com.skylunch.airport.AirportProperties
+import com.skylunch.redis.RedisApplicationProperties
 import com.skylunch.restaurant.RestaurantProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -11,7 +12,8 @@ import org.springframework.boot.runApplication
 @EnableConfigurationProperties(
     value = [
         AirportProperties::class,
-        RestaurantProperties::class
+        RestaurantProperties::class,
+        RedisApplicationProperties::class
     ]
 )
 @SpringBootApplication

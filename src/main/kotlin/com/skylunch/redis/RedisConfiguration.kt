@@ -2,7 +2,6 @@ package com.skylunch.redis
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.core.env.Environment
 import org.springframework.data.redis.connection.RedisPassword
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory
@@ -14,12 +13,12 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 class RedisConfiguration {
 
     @Bean
-    fun jedisConnectionFactory(env: Environment): JedisConnectionFactory {
+    fun jedisConnectionFactory(redisApplicationProperties: RedisApplicationProperties): JedisConnectionFactory {
         val redisConfiguration = RedisStandaloneConfiguration()
-        redisConfiguration.hostName = env.getRequiredProperty("spring.redis.host")
-        redisConfiguration.port = env.getRequiredProperty("spring.redis.port").toInt()
-        redisConfiguration.username = env.getRequiredProperty("spring.redis.username")
-        redisConfiguration.password = RedisPassword.of(env.getRequiredProperty("spring.redis.password"))
+        redisConfiguration.hostName = redisApplicationProperties.hostName
+        redisConfiguration.port = redisApplicationProperties.port
+        redisConfiguration.username = redisApplicationProperties.username
+        redisConfiguration.password = RedisPassword.of(redisApplicationProperties.password)
         return JedisConnectionFactory(redisConfiguration)
     }
 

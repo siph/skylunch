@@ -18,6 +18,11 @@ application:
     api:
       apiKey: "k"
       baseUrl: "https://maps.googleapis.com/maps/api/place"
+  redis:
+    hostname: "0.0.0.0"
+    port: 6379
+    username: "redis-user"
+    password: "redis-password"
 logging:
   level:
     web: "debug"
