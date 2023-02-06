@@ -23,6 +23,9 @@ application:
     port: 6379
     username: "redis-user"
     password: "redis-password"
+  security:
+    securityHeaderKey: "key"
+    securityHeaderValue: "value"
 logging:
   level:
     web: "debug"

@@ -1,13 +1,14 @@
-package com.skylunch.security;
+package com.skylunch.security
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
+import org.springframework.boot.context.properties.ConfigurationProperties
+import org.springframework.boot.context.properties.ConstructorBinding
 
 /**
- * Properties to define redis connection.
+ * Properties for header based request filtering.
  */
 @ConstructorBinding
 @ConfigurationProperties(prefix = "application.security")
 class SecurityProperties(
-    val rapidApiHeaderValue: String
+    val securityHeaderKey: String,
+    val securityHeaderValue: String
 )

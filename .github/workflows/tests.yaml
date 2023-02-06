@@ -11,10 +11,16 @@ jobs:
     - uses: cachix/install-nix-action@v18
       with:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
-    - name: maven build
-      run: nix develop --command mvn install -DskipTests=true
+      # Lint
     - name: ktlint
       run: nix develop --command mvn ktlint:check
+      # Build
+    - name: maven build
+      run: nix develop --command mvn install -DskipTests=true
+      # Unit Tests
+    - name: header filter tests
+      run: nix develop --command mvn test -Dtest=HeaderBasedWebFilterTests
+      # Integration Tests
     - name: restaurant tests
       run: nix develop --command mvn test -Dtest=RestaurantServiceTests
     - name: airport tests
