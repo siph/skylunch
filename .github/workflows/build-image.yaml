@@ -5,7 +5,7 @@ on:
       - master
 jobs:
   tests:
-    uses: ./.github/workflows/service-tests.yaml
+    uses: ./.github/workflows/tests.yaml
   docker:
     runs-on: ubuntu-latest
     needs: tests
