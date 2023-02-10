@@ -2,11 +2,12 @@ spring:
   graphql:
     graphiql:
       enabled: true
-  redis:
-    host: "localhost"
-    port: 6370
   main:
     allow-bean-definition-overriding: true
+  data:
+    redis:
+      host: "localhost"
+      port: 6370
 application:
   airport:
     daysUntilStale: 0
@@ -19,7 +20,7 @@ application:
       apiKey: "k"
       baseUrl: "https://maps.googleapis.com/maps/api/place"
   redis:
-    hostname: "0.0.0.0"
+    hostname: "http://0.0.0.0"
     port: 6379
     username: "redis-user"
     password: "redis-password"

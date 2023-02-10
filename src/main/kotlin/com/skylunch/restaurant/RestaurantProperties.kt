@@ -1,10 +1,10 @@
 package com.skylunch.restaurant
 
 import com.skylunch.restaurant.restaurantApi.RestaurantApiProperties
+import jakarta.validation.Valid
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.validation.annotation.Validated
 
 /**
@@ -17,13 +17,13 @@ import org.springframework.validation.annotation.Validated
  * The default radius is five nautical miles.
  */
 @Validated
-@ConstructorBinding
 @ConfigurationProperties(prefix = "application.restaurant")
 class RestaurantProperties(
+    @Valid
     val api: RestaurantApiProperties,
-    @Min(0)
+    @field:Min(value = 0, message = "Can not be less than 0")
     val daysUntilStale: Long,
-    @Min(1)
-    @Max(50_000)
+    @field:Min(value = 1, message = "Can not be less than 0")
+    @field:Max(value = 50_000, message = "Can not be more than 50,000")
     val radius: Long = 9260L
 )
