@@ -28,7 +28,6 @@ class HeaderBasedWebFilterTests {
 
     @Test
     fun `assert that absent header value fails`() {
-        val properties = getMockSecurityProperties()
         val exchange = MockServerWebExchange.from(MockServerHttpRequest.get("/"))
         val chain = getChain()
         HeaderBasedWebFilter(getMockSecurityProperties()).filter(exchange, chain).block()
