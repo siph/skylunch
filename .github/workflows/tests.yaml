@@ -36,10 +36,15 @@ jobs:
       # Test Coverage
     - name: jacoco report
       run: nix develop --command mvn jacoco:report
-    - name: test coverage
+    - name: post coverage percentage
       uses: madrapps/jacoco-report@v1.3
       with:
         paths: ${{ github.workspace }}/target/site/jacoco/jacoco.xml
         token: ${{ secrets.GITHUB_TOKEN }}
         min-coverage-overall: 60
         min-coverage-changed-files: 60
+    - name: store reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: jacoco-csv
+        path: target/site/jacoco/jacoco.csv
