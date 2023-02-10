@@ -1,9 +1,9 @@
 package com.skylunch.airport
 
 import com.skylunch.airport.airportApi.AirportApiProperties
+import jakarta.validation.Valid
 import jakarta.validation.constraints.Min
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.validation.annotation.Validated
 
 /**
@@ -14,10 +14,10 @@ import org.springframework.validation.annotation.Validated
  * A value of 0 means the queries never expire.
  */
 @Validated
-@ConstructorBinding
 @ConfigurationProperties(prefix = "application.airport")
 class AirportProperties(
+    @Valid
     val api: AirportApiProperties,
-    @Min(0)
+    @field:Min(value = 0, message = "Can not be less than 0")
     val daysUntilStale: Long
 )
