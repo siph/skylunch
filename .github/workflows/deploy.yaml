@@ -10,5 +10,5 @@ jobs:
     needs: tests
     uses: ./.github/workflows/coverage-badge.yaml
   docker:
-    needs: tests
+    needs: badges
     uses: ./.github/workflows/build-image.yaml
