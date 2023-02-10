@@ -1,0 +1,14 @@
+name: "Deploy"
+on:
+  push:
+    branches:
+      - master
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yaml
+  badges:
+    needs: tests
+    uses: ./.gihub/workflows/coverage-badge.yaml
+  docker:
+    needs: tests
+    uses: ./github/workflows/build-image.yaml
