@@ -42,7 +42,7 @@
         devShell = with pkgs;
           mkShell {
             nativeBuildInputs = [
-              openjdk11_headless
+              openjdk17_headless
               maven
             ];
           };
