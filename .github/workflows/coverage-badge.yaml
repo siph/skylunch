@@ -13,7 +13,6 @@ jobs:
         ref: badges
         path: badges
     - name: Retrieve jacoco artifact
-      uses: actions/checkout@v3
       uses: actions/download-artifact@v3
       with:
         name: jacoco-csv
