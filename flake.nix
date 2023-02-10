@@ -41,10 +41,26 @@
         };
         devShell = with pkgs;
           mkShell {
+            name = "build-environment";
             nativeBuildInputs = [
               openjdk17_headless
               maven
             ];
+            shellHook = ''
+              export SPRING_MAIN_ALLOWBEANDEFINITIONOVERRIDING=true
+              export APPLICATION_AIRPORT_DAYSUNTILSTALE=0
+              export APPLICATION_AIRPORT_API_APIKEY="k"
+              export APPLICATION_AIRPORT_API_BASEURL="https://airports-by-api-ninjas.p.rapidapi.com/v1/airports"
+              export APPLICATION_RESTAURANT_DAYSUNTILSTALE=0
+              export APPLICATION_RESTAURANT_API_APIKEY="k"
+              export APPLICATION_RESTAURANT_API_BASEURL="https://maps.googleapis.com/maps/api/place"
+              export APPLICATION_REDIS_HOSTNAME="http://0.0.0.0"
+              export APPLICATION_REDIS_PORT=6379
+              export APPLICATION_REDIS_USERNAME="redis-user"
+              export APPLICATION_REDIS_PASSWORD="redis-password"
+              export APPLICATION_SECURITY_SECURITYHEADERKEY="key"
+              export APPLICATION_SECURITY_SECURITYHEADERVALUE="value"
+            '';
           };
       });
 }
