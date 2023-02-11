@@ -12,10 +12,10 @@ jobs:
       with:
         ref: badges
         path: badges
-    - name: Retrieve jacoco artifact
+    - name: Retrieve jacoco report
       uses: actions/download-artifact@v3
       with:
-        name: jacoco-csv
+        name: jacoco-report
         path: target/site/jacoco
     - name: Generate Badges
       id: jacoco
