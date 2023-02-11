@@ -79,6 +79,17 @@ class AirportServiceTests : AbstractBaseDocumentTest() {
     }
 
     @Test
+    fun `assert airport is saved`() {
+        val airportApiDTO = getMockAirportApiDTO()
+        val json = ObjectMapper().writeValueAsString(airportApiDTO)
+        val mockResponse = getMockResponseOK(json)
+        server.enqueue(mockResponse)
+        airportService.getAirport(AirportCode(code = "lax", codeType = getAirportCodeType("lax"))).block()!!
+        assertThat(airportRepository.findAll().size).isEqualTo(1)
+        assertThat(airportRepository.findAll().first().icao).isEqualTo("KLAX")
+    }
+
+    @Test
     fun `assert airport is not found`() {
         val airport = getMockAirport()
         airportRepository.save(airport)
