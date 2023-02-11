@@ -28,6 +28,8 @@ jobs:
         nix develop --command mvn test -Dtest=RestaurantApiPropertiesTests
         nix develop --command mvn test -Dtest=RestaurantPropertiesTests
         nix develop --command mvn test -Dtest=SecurityPropertiesTests
+    - name: type conversion tests
+      run: nix develop --command mvn test -Dtest=SearchDTOTests
       # Integration Tests
     - name: restaurant tests
       run: nix develop --command mvn test -Dtest=RestaurantServiceTests
