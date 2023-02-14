@@ -1,7 +1,6 @@
 ![tests workflow](https://github.com/siph/skylunch/actions/workflows/tests.yaml/badge.svg)
 ![image workflow](https://github.com/siph/skylunch/actions/workflows/build-image.yaml/badge.svg)
 ![coverage](../badges/jacoco.svg)
-![branches coverage](../badges/branches.svg)
 # Skylunch
 
 The $100 hamburger is a general aviation tradition of flying to a neighboring airport for lunch. The meal is not what is important, it's only an excuse to fly. But that doesn't mean that you should have to settle for a mediocre meal.
