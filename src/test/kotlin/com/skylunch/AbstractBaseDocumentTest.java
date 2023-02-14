@@ -11,7 +11,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @DirtiesContext
 @SpringBootTest(
         classes = AbstractBaseDocumentTest.Config.class,
-        properties = { "spring.main.allow-bean-definition-overriding=true" }
+        properties = { "spring.main.allow-bean-definition-overriding=true", "logging.level.com.skylunch=trace" }
 )
 public abstract class AbstractBaseDocumentTest extends AbstractBaseOMTest {
     @SpringBootApplication

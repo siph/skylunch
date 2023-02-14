@@ -12,7 +12,7 @@ import com.skylunch.restaurant.Restaurant
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class RestaurantApiDTO(
     @get:JsonProperty("results")
-    val results: List<Place>,
+    val results: List<Place> = emptyList(),
     @get:JsonProperty("status")
     val status: String?
 )
