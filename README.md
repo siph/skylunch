@@ -3,9 +3,11 @@
 ![coverage](../badges/jacoco.svg)
 # Skylunch
 
-The $100 hamburger is a general aviation tradition of flying to a neighboring airport for lunch. The meal is not what is important, it's only an excuse to fly. But that doesn't mean that you should have to settle for a mediocre meal.
+The $100 hamburger is a phrase used to describe a recreational flight taken by pilots for the primary purpose of having a meal at a distant airport.
+The term is often used humorously to describe the high cost of general aviation, but it also represents the freedom and joy of flying for leisure.
 
-`Skylunch` is a simple, non-blocking api built using [Spring Webflux](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html) that, provided with an airport code, will return a list of restaurants with their ratings and other details.
+`Skylunch` is a simple, non-blocking api built using [Spring Webflux](https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html)
+that, provided with an airport code, will return a detailed list of restaurants within a configurable radius.
 
 The purpose of `Skylunch` is to help aviators find new and interesting destinations to elevate the enjoyment of their favorite hobby.
 
