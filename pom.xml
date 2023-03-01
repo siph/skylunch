@@ -21,6 +21,7 @@
         <testcontainers.redis.junit.version>${testcontainers.redis.version}</testcontainers.redis.junit.version>
         <okhttp.version>4.10.0</okhttp.version>
         <okhttp.mockwebserver.version>${okhttp.version}</okhttp.mockwebserver.version>
+        <kotest.version>5.5.5</kotest.version>
     </properties>
     <dependencies>
         <dependency>
@@ -101,6 +102,12 @@
             <groupId>com.redis.om</groupId>
             <artifactId>redis-om-spring</artifactId>
             <version>${redis.om.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.kotest</groupId>
+            <artifactId>kotest-property-jvm</artifactId>
+            <version>${kotest.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

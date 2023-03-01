@@ -1,6 +1,10 @@
 package com.skylunch.airport
 
 import com.skylunch.airport.airportApi.AirportApiProperties
+import io.kotest.common.runBlocking
+import io.kotest.property.Arb
+import io.kotest.property.arbitrary.long
+import io.kotest.property.checkAll
 import jakarta.validation.Validation
 import jakarta.validation.Validator
 import org.assertj.core.api.Assertions
@@ -12,17 +16,25 @@ class AirportPropertiesTests {
 
     @Test
     fun `Assert valid constraints pass`() {
-        val apiProperties = AirportApiProperties(baseUrl = "http://0.0.0.0", "key")
-        val properties = AirportProperties(api = apiProperties, daysUntilStale = 14)
-        val errors = validator.validate(properties)
-        Assertions.assertThat(errors.size).isEqualTo(0)
+        runBlocking {
+            checkAll(Arb.long(0, Long.MAX_VALUE)) { long ->
+                val apiProperties = AirportApiProperties(baseUrl = "http://0.0.0.0", "key")
+                val properties = AirportProperties(api = apiProperties, daysUntilStale = long)
+                val errors = validator.validate(properties)
+                Assertions.assertThat(errors.size).isEqualTo(0)
+            }
+        }
     }
 
     @Test
     fun `Assert nested invalid constraints fail`() {
-        val apiProperties = AirportApiProperties(baseUrl = "http://0.0.0.0", "key")
-        val properties = AirportProperties(api = apiProperties, daysUntilStale = -1)
-        val errors = validator.validate(properties)
-        Assertions.assertThat(errors.size).isEqualTo(1)
+        runBlocking {
+            checkAll(Arb.long(Long.MIN_VALUE, -1)) { long ->
+                val apiProperties = AirportApiProperties(baseUrl = "http://0.0.0.0", "key")
+                val properties = AirportProperties(api = apiProperties, daysUntilStale = long)
+                val errors = validator.validate(properties)
+                Assertions.assertThat(errors.size).isGreaterThan(0)
+            }
+        }
     }
 }
