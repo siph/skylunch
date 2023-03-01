@@ -1,9 +1,12 @@
 package com.skylunch.airport.airportApi
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.skylunch.getMockAirportApiDTO
-import com.skylunch.getMockAirportCode
+import com.skylunch.airport.AirportCode
+import com.skylunch.airport.getAirportCodeType
+import com.skylunch.airportApiDTOArb
 import com.skylunch.getMockAirportProperties
+import io.kotest.common.runBlocking
+import io.kotest.property.checkAll
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
@@ -39,26 +42,29 @@ class AirportApiServiceTests {
     }
 
     @Test
-    fun `assert that remote call succeeds`() {
-        val dto = getMockAirportApiDTO()
-        val json = ObjectMapper().writeValueAsString(dto)
-        val mockResponse = MockResponse()
-            .setResponseCode(200)
-            .setBody(json)
-            .setHeader("content-type", "application/json")
-            .setHeader("content-length", json.length)
-        val airportDto = airportApiService.getAirport(getMockAirportCode())
-        server.enqueue(mockResponse)
-        StepVerifier.create(airportDto)
-            .expectNextMatches {
-                assertThat(it).isEqualTo(dto)
-                true
+    fun `assert that remote calls succeed`() {
+        runBlocking {
+            checkAll(10, airportApiDTOArb) { dto ->
+                val json = ObjectMapper().writeValueAsString(dto)
+                val mockResponse = MockResponse()
+                    .setResponseCode(200)
+                    .setBody(json)
+                    .setHeader("content-type", "application/json")
+                    .setHeader("content-length", json.length)
+                val airportCode = AirportCode(dto.iata!!, getAirportCodeType(dto.iata!!))
+                server.enqueue(mockResponse)
+                val airportDTO = airportApiService.getAirport(airportCode)
+                StepVerifier.create(airportDTO)
+                    .expectNextMatches {
+                        assertThat(it).isEqualTo(dto)
+                        true
+                    }
+                    .verifyComplete()
+                val request = server.takeRequest()
+                Assertions.assertTrue(request.path!!.contains("iata=${dto.iata}"))
+                Assertions.assertNotNull(request.getHeader("X-RapidAPI-Key"))
+                Assertions.assertNotNull(request.getHeader("X-RapidAPI-host"))
             }
-            .verifyComplete()
-
-        val request = server.takeRequest()
-        Assertions.assertTrue(request.path!!.contains("iata=LAX"))
-        Assertions.assertNotNull(request.getHeader("X-RapidAPI-Key"))
-        Assertions.assertNotNull(request.getHeader("X-RapidAPI-host"))
+        }
     }
 }

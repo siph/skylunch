@@ -1,10 +1,12 @@
 package com.skylunch.restaurant.restaurantApi
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.skylunch.getMockRestaurantApiDTO
+import com.skylunch.getMockResponseOK
 import com.skylunch.getMockRestaurantProperties
 import com.skylunch.restaurant.RestaurantProperties
-import okhttp3.mockwebserver.MockResponse
+import com.skylunch.restaurantApiDTOArb
+import io.kotest.common.runBlocking
+import io.kotest.property.checkAll
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterAll
@@ -42,26 +44,29 @@ class RestaurantApiServiceTests {
 
     @Test
     fun `assert that remote call succeeds`() {
-        val dto: RestaurantApiDTO = getMockRestaurantApiDTO()
-        val json = ObjectMapper().writeValueAsString(dto)
-        val mockResponse = MockResponse()
-            .setResponseCode(200)
-            .setBody(json)
-            .setHeader("content-type", "application/json")
-            .setHeader("content-length", json.length)
-        val restaurantDTO = restaurantApiService.getRestaurants(Point(105.0423, 38.8409))
-        server.enqueue(mockResponse)
-        StepVerifier.create(restaurantDTO)
-            .expectNextMatches {
-                assertThat(it).isEqualTo(dto)
-                assertThat(ObjectMapper().writeValueAsString(it)).isEqualTo(json)
-                true
+        runBlocking {
+            checkAll(10, restaurantApiDTOArb) { dto ->
+                val first = dto.results.first()
+                val json = ObjectMapper().writeValueAsString(dto)
+                val mockResponse = getMockResponseOK(json)
+                val restaurantDTO = restaurantApiService.getRestaurants(
+                    Point(first.geometry.location.lng, first.geometry.location.lat)
+                )
+                server.enqueue(mockResponse)
+                StepVerifier.create(restaurantDTO)
+                    .expectNextMatches {
+                        assertThat(it).isEqualTo(dto)
+                        assertThat(ObjectMapper().writeValueAsString(it)).isEqualTo(json)
+                        true
+                    }
+                    .verifyComplete()
+                val request = server.takeRequest()
+                assertThat(request.path).contains(
+                    "location=${first.geometry.location.lat},${first.geometry.location.lng}"
+                )
+                assertThat(request.path).contains("radius=${properties.radius}")
+                assertThat(request.path).contains("key=${properties.api.apiKey}")
             }
-            .verifyComplete()
-
-        val request = server.takeRequest()
-        assertThat(request.path).contains("location=38.8409,105.0423")
-        assertThat(request.path).contains("radius=${properties.radius}")
-        assertThat(request.path).contains("key=key")
+        }
     }
 }

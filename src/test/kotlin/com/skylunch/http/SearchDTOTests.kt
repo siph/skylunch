@@ -1,37 +1,41 @@
 package com.skylunch.http
 
-import com.skylunch.restaurant.Restaurant
+import com.skylunch.pointArb
+import com.skylunch.restaurantArb
+import io.kotest.common.runBlocking
+import io.kotest.property.checkAll
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
-import org.springframework.data.geo.Point
-import java.time.LocalDateTime
 
 class SearchDTOTests {
 
     @Test
     fun `Assert Restaurant converts to SearchDTO`() {
-        val restaurant = Restaurant(
-            id = "id",
-            address = "123",
-            phoneNumber = "123456789",
-            name = "chum bucket",
-            rating = "1",
-            url = "https://www.google.com/result?id=553",
-            totalRating = null,
-            website = "https://chum.bucket",
-            location = Point("-118.4079971".toDouble(), "33.94250107".toDouble()),
-            modified = LocalDateTime.now()
-        )
-        val expectedDto = SearchDTO(
-            name = "chum bucket",
-            address = "123",
-            phoneNumber = "123456789",
-            rating = "1",
-            totalRating = null,
-            url = "https://www.google.com/result?id=553",
-            website = "https://chum.bucket",
-            coords = Coords("33.94250107", "-118.4079971")
-        )
-        Assertions.assertThat(restaurant.toSearchDTO()).isEqualTo(expectedDto)
+        runBlocking {
+            checkAll(restaurantArb) { restaurant ->
+                val expectedDto = SearchDTO(
+                    name = restaurant.name,
+                    address = restaurant.address,
+                    phoneNumber = restaurant.phoneNumber,
+                    rating = restaurant.rating,
+                    totalRating = restaurant.totalRating,
+                    url = restaurant.url,
+                    website = restaurant.website,
+                    coords = restaurant.location.toCoords()
+                )
+                Assertions.assertThat(restaurant.toSearchDTO()).isEqualTo(expectedDto)
+            }
+        }
+    }
+
+    @Test
+    fun `Assert Point converts to Location`() {
+        runBlocking {
+            checkAll(pointArb) {
+                val location = it.toCoords()
+                Assertions.assertThat(location.longitude).isEqualTo(it.x.toString())
+                Assertions.assertThat(location.latitude).isEqualTo(it.y.toString())
+            }
+        }
     }
 }

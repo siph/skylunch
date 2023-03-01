@@ -1,5 +1,11 @@
 package com.skylunch.security
 
+import io.kotest.common.runBlocking
+import io.kotest.property.Arb
+import io.kotest.property.arbitrary.Codepoint
+import io.kotest.property.arbitrary.az
+import io.kotest.property.arbitrary.string
+import io.kotest.property.checkAll
 import jakarta.validation.Validation
 import jakarta.validation.Validator
 import org.assertj.core.api.Assertions
@@ -11,9 +17,16 @@ class SecurityPropertiesTests {
 
     @Test
     fun `Assert valid constraints pass`() {
-        val properties = SecurityProperties(securityHeaderKey = "key", securityHeaderValue = "value")
-        val errors = validator.validate(properties)
-        Assertions.assertThat(errors.size).isEqualTo(0)
+        runBlocking {
+            checkAll(
+                Arb.string(3, 20, Codepoint.az()),
+                Arb.string(3, 20, Codepoint.az())
+            ) { key, value ->
+                val properties = SecurityProperties(securityHeaderKey = key, securityHeaderValue = value)
+                val errors = validator.validate(properties)
+                Assertions.assertThat(errors.size).isEqualTo(0)
+            }
+        }
     }
 
     @Test

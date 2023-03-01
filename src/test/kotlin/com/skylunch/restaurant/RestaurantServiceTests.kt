@@ -2,19 +2,22 @@ package com.skylunch.restaurant
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.skylunch.AbstractBaseDocumentTest
-import com.skylunch.getMockCandidatesDTO
 import com.skylunch.getMockResponseOK
 import com.skylunch.getMockRestaurantProperties
+import com.skylunch.placeArb
+import com.skylunch.restaurant.restaurantApi.CandidatesDTO
 import com.skylunch.restaurant.restaurantApi.Geometry
 import com.skylunch.restaurant.restaurantApi.LatLngLiteral
 import com.skylunch.restaurant.restaurantApi.Place
 import com.skylunch.restaurant.restaurantApi.RestaurantApiDTO
 import com.skylunch.restaurant.restaurantApi.RestaurantApiService
+import com.skylunch.restaurantArb
+import io.kotest.common.runBlocking
+import io.kotest.property.checkAll
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
@@ -53,66 +56,89 @@ class RestaurantServiceTests : AbstractBaseDocumentTest() {
         server.shutdown()
     }
 
-    @BeforeEach
-    fun initialize() {
-        restaurantRepository.deleteAll()
-    }
-
     @Test
     fun `assert restaurant is found`() {
-        val restaurant = getMockRestaurant()
-        val location = restaurantRepository.save(restaurant).location
-        val result = restaurantService.getRestaurants(location).toIterable()
-        assertThat(result).isNotEmpty
+        runBlocking {
+            checkAll(10, restaurantArb) { restaurant ->
+                assertThat(restaurantRepository.findAll().size).isEqualTo(0)
+                restaurant.modified = LocalDateTime.now()
+                val location = restaurantRepository.save(restaurant).location
+                val result = restaurantService.getRestaurants(location).blockFirst()!!
+                assertThat(result.name).isEqualTo(restaurant.name)
+                assertThat(result.address).isEqualTo(restaurant.address)
+                assertThat(result.phoneNumber).isEqualTo(restaurant.phoneNumber)
+                assertThat(result.url).isEqualTo(restaurant.url)
+                assertThat(result.rating).isEqualTo(restaurant.rating)
+                assertThat(result.totalRating).isEqualTo(restaurant.totalRating)
+                assertThat(result.website).isEqualTo(restaurant.website)
+                restaurantRepository.deleteAll()
+            }
+        }
     }
 
     @Test
     fun `assert restaurant is updated`() {
-        val staleDate = LocalDateTime.now().minusDays(35L)
-        val restaurant = restaurantRepository.save(getMockRestaurant(staleDate))
-        val json = ObjectMapper().writeValueAsString(getMockCandidatesDTO())
-        val mockResponse = getMockResponseOK(json)
-        server.enqueue(mockResponse)
-        val updatedRestaurant = restaurantService.getRestaurants(restaurant.location)
-            .filter { it.id == restaurant.id }
-            .blockFirst()!!
-        assertThat(updatedRestaurant.modified).isAfter(staleDate)
+        runBlocking {
+            checkAll(10, restaurantArb) { restaurant ->
+                assertThat(restaurantRepository.findAll().size).isEqualTo(0)
+                val staleDate = LocalDateTime.now().minusDays(35L)
+                restaurant.modified = staleDate
+                restaurantRepository.save(restaurant)
+                val candidatesDTO = CandidatesDTO(
+                    candidates = listOf(
+                        Place(
+                            address = restaurant.address,
+                            phoneNumber = restaurant.phoneNumber,
+                            rating = restaurant.rating,
+                            totalRating = restaurant.totalRating,
+                            url = restaurant.url,
+                            website = restaurant.website,
+                            name = "new: ${restaurant.name}",
+                            geometry = Geometry(
+                                location = LatLngLiteral(
+                                    lat = restaurant.location.y,
+                                    lng = restaurant.location.x
+                                )
+                            )
+                        )
+                    )
+                )
+                val json = ObjectMapper().writeValueAsString(candidatesDTO)
+                val mockResponse = getMockResponseOK(json)
+                server.enqueue(mockResponse)
+                val updatedRestaurant = restaurantService.getRestaurants(restaurant.location)
+                    .filter { it.id == restaurant.id }
+                    .blockFirst()!!
+                assertThat(updatedRestaurant.modified).isAfter(staleDate)
+                assertThat(updatedRestaurant.name).isEqualTo("new: ${restaurant.name}")
+                assertThat(updatedRestaurant.address).isEqualTo(restaurant.address)
+                assertThat(updatedRestaurant.phoneNumber).isEqualTo(restaurant.phoneNumber)
+                assertThat(updatedRestaurant.url).isEqualTo(restaurant.url)
+                assertThat(updatedRestaurant.rating).isEqualTo(restaurant.rating)
+                assertThat(updatedRestaurant.totalRating).isEqualTo(restaurant.totalRating)
+                assertThat(updatedRestaurant.website).isEqualTo(restaurant.website)
+                restaurantRepository.deleteAll()
+            }
+        }
     }
 
     @Test
     fun `assert new restaurants are cached`() {
-        val place = Place(
-            address = "address",
-            phoneNumber = "1234",
-            name = "spots",
-            rating = "4",
-            totalRating = "13",
-            url = "b.c",
-            website = "google.com",
-            geometry = Geometry(LatLngLiteral(-118.4079971, 33.94250107))
-        )
-        val json = ObjectMapper().writeValueAsString(RestaurantApiDTO(results = listOf(place), status = "OK"))
-        val mockResponse = getMockResponseOK(json)
-        server.enqueue(mockResponse)
-        restaurantService.getRestaurants(Point(-118.4079971, 33.94250107)).blockFirst()!!
-        assertThat(restaurantRepository.findAll().size).isEqualTo(1)
-    }
-
-    private fun getMockRestaurant(
-        modified: LocalDateTime = LocalDateTime.now(),
-        location: Point = Point("-118.4079971".toDouble(), "33.94250107".toDouble())
-    ): Restaurant {
-        return Restaurant(
-            id = "one",
-            address = "address",
-            phoneNumber = "1234",
-            name = "spots",
-            rating = "4",
-            totalRating = "13",
-            url = "b.c",
-            website = "google.com",
-            location = location,
-            modified = modified
-        )
+        runBlocking {
+            checkAll(10, placeArb) { place ->
+                assertThat(restaurantRepository.findAll().size).isEqualTo(0)
+                val json = ObjectMapper().writeValueAsString(RestaurantApiDTO(results = listOf(place), status = "OK"))
+                val mockResponse = getMockResponseOK(json)
+                server.enqueue(mockResponse)
+                restaurantService.getRestaurants(
+                    Point(
+                        place.geometry.location.lat,
+                        place.geometry.location.lng
+                    )
+                ).blockFirst()!!
+                assertThat(restaurantRepository.findAll().size).isEqualTo(1)
+                restaurantRepository.deleteAll()
+            }
+        }
     }
 }
