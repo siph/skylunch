@@ -13,31 +13,31 @@ jobs:
         github_access_token: ${{ secrets.GITHUB_TOKEN }}
       # Lint
     - name: ktlint
-      run: nix develop --command mvn ktlint:check
+      run: nix develop .#build --command mvn ktlint:check
       # Build
     - name: maven build
-      run: nix develop --command mvn install -DskipTests=true
+      run: nix develop .#build --command mvn install -DskipTests=true
       # Unit Tests
     - name: header filter tests
-      run: nix develop --command mvn test -Dtest=HeaderBasedWebFilterTests
+      run: nix develop .#build --command mvn test -Dtest=HeaderBasedWebFilterTests
     - name: property validation tests
       run: |
-        nix develop --command mvn test -Dtest=AirportApiPropertiesTests
-        nix develop --command mvn test -Dtest=AirportPropertiesTests
-        nix develop --command mvn test -Dtest=RedisApplicationPropertiesTests
-        nix develop --command mvn test -Dtest=RestaurantApiPropertiesTests
-        nix develop --command mvn test -Dtest=RestaurantPropertiesTests
-        nix develop --command mvn test -Dtest=SecurityPropertiesTests
+        nix develop .#build --command mvn test -Dtest=AirportApiPropertiesTests
+        nix develop .#build --command mvn test -Dtest=AirportPropertiesTests
+        nix develop .#build --command mvn test -Dtest=RedisApplicationPropertiesTests
+        nix develop .#build --command mvn test -Dtest=RestaurantApiPropertiesTests
+        nix develop .#build --command mvn test -Dtest=RestaurantPropertiesTests
+        nix develop .#build --command mvn test -Dtest=SecurityPropertiesTests
     - name: type conversion tests
-      run: nix develop --command mvn test -Dtest=SearchDTOTests
+      run: nix develop .#build --command mvn test -Dtest=SearchDTOTests
       # Integration Tests
     - name: restaurant tests
-      run: nix develop --command mvn test -Dtest=RestaurantServiceTests
+      run: nix develop .#build --command mvn test -Dtest=RestaurantServiceTests
     - name: airport tests
-      run: nix develop --command mvn test -Dtest=AirportServiceTests
+      run: nix develop .#build --command mvn test -Dtest=AirportServiceTests
       # Test Coverage
     - name: jacoco report
-      run: nix develop --command mvn jacoco:report
+      run: nix develop .#build --command mvn jacoco:report
     - name: post coverage percentage
       uses: madrapps/jacoco-report@v1.3
       with:
