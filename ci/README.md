@@ -79,5 +79,5 @@ In addition to managing the application environment, nix is also used to manage 
 environment. `flake.nix` holds a devshell for the needed dependencies
 (`docker`, `doctl`, `kubectl`, etc) to initialize and manage the infrastructure and deployment.
 ```shell
-nix develop
+nix develop .#ci
 ```
