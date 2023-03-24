@@ -20,9 +20,11 @@
       let
         pkgs = import nixpkgs { inherit system; };
 
+        jdk = pkgs.openjdk17_headless;
+
         # Build Dependencies.
         buildInputs = with pkgs; [
-          openjdk17_headless
+          jdk
           maven
         ];
 
@@ -67,23 +69,40 @@
             format = "do";
           };
           # Nix derivation of `skylunch` application.
-          skylunch = pkgs.stdenv.mkDerivation {
-            name = "skylunch";
-            src = ./.;
-            buildInputs = with pkgs; [ openjdk11_headless maven ];
-            buildPhase = "mvn clean install -Dmaven.repo.local=$out -DskipTests=true";
-            installPhase = ''
-              find $out -type f \
-              -name \*.lastUpdated -or \
-              -name resolver-status.properties -or \
-              -name _remote.repositories \
-              -delete
-            '';
-            dontFixup = true;
-            outputHashAlgo = "sha256";
-            outputHashMode = "recursive";
-            outputHash = "sha256-pZt5gBU3mggN9RecPPKTILyd1BPLJxP99RHDqB5iECI=";
-          };
+          skylunch =
+            let
+              # Maven repository
+              repository = pkgs.stdenv.mkDerivation {
+                name = "skylunch";
+                src = ./.;
+                inherit buildInputs;
+                buildPhase = "mvn clean install -Dmaven.repo.local=$out -DskipTests=true";
+                installPhase = ''
+                  find $out -type f \
+                  -name \*.lastUpdated -or \
+                  -name resolver-status.properties -or \
+                  -name _remote.repositories \
+                  -delete
+                '';
+                dontFixup = true;
+                outputHashAlgo = "sha256";
+                outputHashMode = "recursive";
+                outputHash = "sha256-8v8ME+0nB71Zz5XDRjb5C2nT8tY3n+X+NpCs6XIZTn4=";
+              };
+            in
+              pkgs.stdenv.mkDerivation rec {
+                name = "skylunch";
+                version = "0.1.6";
+                src = ./.;
+                nativeBuildInputs = [ pkgs.makeWrapper ] ++ buildInputs;
+                installPhase = ''
+                  mkdir -p $out/bin
+                  mkdir -p $out/jar
+                  cp ${repository}/com/skylunch/skylunch/${version}/${name}-${version}.jar $out/jar
+                  makeWrapper ${jdk}/bin/java $out/bin/${name} \
+                    --add-flags "-jar $out/jar/${name}-${version}.jar"
+                '';
+            };
           default = packages.skylunch;
         };
         apps = {
@@ -97,9 +116,11 @@
             shellHook = testEnvironment;
           };
           ci = mkShell {
+            name = "ci-tools";
             buildInputs = ciInputs;
           };
           dev = mkShell {
+            name = "dev-environment";
             buildInputs = devInputs;
           };
           default = dev;
